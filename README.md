@@ -1,4 +1,4 @@
 # Client for "Find friends by interest" diploma project
 
 ### Demo:
-![](https://github.com/leopold-the-code/client/blob/main/assets/demo.gif | height=300)
+![](https://github.com/leopold-the-code/client/blob/main/assets/demo.gif | width=100)
