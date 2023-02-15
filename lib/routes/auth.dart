@@ -36,11 +36,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               TextField(
                 controller: pswdCtlr,
                 decoration: InputDecoration(hintText: 'password'),
+                obscureText: true,
               ),
               TextField(
                 controller: nameCtlr,
                 decoration: InputDecoration(hintText: 'name'),
               ),
+              // CalendarDatePicker(
+              //   initialDate: DateTime(2001),
+              //   firstDate: DateTime(1995),
+              //   lastDate: DateTime(2010),
+              //   onDateChanged: (_) {},
+              //   initialCalendarMode: DatePickerMode.year,
+              // ),
               TextField(
                 controller: yearCtlr,
                 decoration: InputDecoration(hintText: 'year of birth'),
