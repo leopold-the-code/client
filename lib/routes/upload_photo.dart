@@ -12,16 +12,14 @@ class UploadPhoto extends StatefulWidget {
 
 class _UploadPhotoState extends State<UploadPhoto> {
   final ImagePicker _picker = ImagePicker();
-  List<XFile> _localImageStore = [];
-  List<Uint8List> _loadedFiles = [];
-  // XFile? _chosenImage;
+  final List<XFile> _localImageStore = [];
+  final List<Uint8List> _loadedFiles = [];
 
   Future<List<Uint8List>> _load() async {
-    _loadedFiles = [];
-    _localImageStore.forEach((element) async {
-      //
-      _loadedFiles.add(await element.readAsBytes());
-    });
+    _loadedFiles.clear();
+    for (var img in _localImageStore) {
+      _loadedFiles.add(await img.readAsBytes());
+    }
     return _loadedFiles;
   }
 
@@ -44,15 +42,21 @@ class _UploadPhotoState extends State<UploadPhoto> {
                   return GridView.count(
                     crossAxisCount: 2,
                     // maxCrossAxisExtent: 400,
-                    children: snapshot.data!.map(
-                      (e) {
-                        return SizedBox(
-                          width: 200,
-                          height: 200,
-                          child: Image.memory(e),
-                        );
-                      },
-                    ).toList(),
+                    children: [
+                      ...snapshot.data!.map(
+                        (e) {
+                          return _Wrapper(child: Image.memory(e));
+                        },
+                      ).toList(),
+                      _Wrapper(child: _PickImageButton(
+                        onTap: () async {
+                          final _chosenImage = await _picker.pickImage(source: ImageSource.gallery);
+                          if (_chosenImage == null) return;
+                          _localImageStore.add(_chosenImage!);
+                          setState(() {});
+                        },
+                      )),
+                    ],
                   );
                 }),
               ),
@@ -63,14 +67,6 @@ class _UploadPhotoState extends State<UploadPhoto> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButton(
-                    child: Text('pick photo'),
-                    onPressed: () async {
-                      final _chosenImage = await _picker.pickImage(source: ImageSource.gallery);
-                      _localImageStore.add(_chosenImage!);
-                      setState(() {});
-                    },
-                  ),
                   ElevatedButton(
                     child: Text('clear'),
                     onPressed: () async {
@@ -91,6 +87,48 @@ class _UploadPhotoState extends State<UploadPhoto> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _PickImageButton extends StatelessWidget {
+  const _PickImageButton({
+    super.key,
+    required this.onTap,
+  });
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Icon(
+        Icons.add,
+        size: 48,
+      ),
+    );
+  }
+}
+
+class _Wrapper extends StatelessWidget {
+  const _Wrapper({
+    super.key,
+    required this.child,
+  });
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 200,
+      height: 200,
+      margin: EdgeInsets.all(8),
+      clipBehavior: Clip.hardEdge,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Colors.blueAccent),
+      ),
+      child: child,
     );
   }
 }
