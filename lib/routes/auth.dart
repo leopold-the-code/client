@@ -1,6 +1,6 @@
 import 'package:client/data/repository.dart';
 import 'package:client/data/user.dart';
-import 'package:client/routes/feed.dart';
+import 'package:client/routes/upload_photo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -65,7 +65,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     );
 
                     if (token.isNotEmpty) {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => FeedScreen()));
+                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => UploadPhoto()));
                     }
                   },
                   child: Text('next')),
