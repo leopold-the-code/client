@@ -1,5 +1,6 @@
 import 'package:client/data/repository.dart';
 import 'package:client/routes/feed.dart';
+import 'package:client/routes/profile.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -54,7 +55,7 @@ class _UploadPhotoState extends State<UploadPhoto> {
                           final _chosenImage = await _picker.pickImage(source: ImageSource.gallery);
                           if (_chosenImage == null) return;
                           _localImageStore.add(_chosenImage);
-                          RepositoryImpl().uploadImage(_chosenImage.path);
+                          await RepositoryImpl().uploadImage(_chosenImage.path);
                           setState(() {});
                         },
                       )),
@@ -79,7 +80,7 @@ class _UploadPhotoState extends State<UploadPhoto> {
                   ElevatedButton(
                     child: Text('next'),
                     onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => FeedScreen()));
+                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => MyProfile()));
                     },
                   ),
                 ],

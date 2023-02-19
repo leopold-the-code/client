@@ -49,6 +49,20 @@ class RepositoryImpl implements Repository {
     return request.send().then((value) => value.statusCode == 200);
   }
 
+  Future<Uint8List> getImage(int id) async {
+    final url = Uri.https(
+      baseUrl,
+      '/get_image/$id',
+    );
+
+    final response = await http.get(url, headers: {
+      'accept': 'application/json',
+      'X-Token':
+          'aCQexsEq0A99CXd2iWdgW5HkGPwPgdwCOPWbz2sRJ/CJQu8nuZnQKabJ6nYmMVoZ1BM2CJMgXDAq+APoAOuNWQ==',
+    });
+    return response.bodyBytes;
+  }
+
   @override
   Future addTag(String tag) {
     // TODO: implement addTag
