@@ -1,16 +1,50 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:flutter/foundation.dart';
-
-part 'user.freezed.dart';
 
 @freezed
-class User with _$User {
-  const factory User({
-    required String email,
-    required String name,
-    required int yearOfBirth,
-    required String description,
-  }) = _User;
+class User {
+  const User({
+    required this.email,
+    required this.name,
+    required this.yearOfBirth,
+    required this.description,
+    this.password,
+    this.surname,
+    this.id,
+  });
 
-  // factory User.fromJson(Map<String, Object?> json) => _$UserFromJson(json);
+  final String email;
+  final String name;
+  final int yearOfBirth;
+  final String description;
+  final String? password;
+  final String? surname;
+  final int? id;
+
+  factory User.test() => User(
+        email: 'test.mail.com',
+        name: 'test name',
+        yearOfBirth: 2001,
+        description: 'desc1',
+        password: 'psw1',
+        surname: 'surname1',
+      );
+
+  factory User.fromJson(Map<String, dynamic> json) => User(
+        email: json['email'] as String,
+        name: json['name'] as String,
+        yearOfBirth: json['birth_date'] as int,
+        description: json['description'] as String,
+      );
+
+  Map<String, String> toJson() {
+    return {
+      'email': email,
+      'name': name,
+      'birth_date': yearOfBirth.toString(),
+      'description': description,
+      'password': password ?? '',
+      'surname': surname ?? '',
+    };
+  }
 }
+// 'demotoken'

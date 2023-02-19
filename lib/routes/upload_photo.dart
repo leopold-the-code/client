@@ -1,3 +1,4 @@
+import 'package:client/data/repository.dart';
 import 'package:client/routes/feed.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +53,8 @@ class _UploadPhotoState extends State<UploadPhoto> {
                         onTap: () async {
                           final _chosenImage = await _picker.pickImage(source: ImageSource.gallery);
                           if (_chosenImage == null) return;
-                          _localImageStore.add(_chosenImage!);
+                          _localImageStore.add(_chosenImage);
+                          RepositoryImpl().uploadImage(_chosenImage.path);
                           setState(() {});
                         },
                       )),
@@ -70,7 +72,6 @@ class _UploadPhotoState extends State<UploadPhoto> {
                   ElevatedButton(
                     child: Text('clear'),
                     onPressed: () async {
-                      //
                       _localImageStore.clear();
                       setState(() {});
                     },

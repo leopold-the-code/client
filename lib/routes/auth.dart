@@ -63,12 +63,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ElevatedButton(
                   onPressed: () async {
                     final token = await RepositoryImpl().register(
-                      User(
-                        email: emailCtlr.text,
-                        name: nameCtlr.text,
-                        yearOfBirth: 2001,
-                        description: descCtlr.text,
-                      ),
+                      User.test(),
+                      // User(
+                      //   // email: emailCtlr.text,
+                      //   // name: nameCtlr.text,
+                      //   // yearOfBirth: 2001,
+                      //   // description: descCtlr.text,
+                      // ),
                       pswdCtlr.text,
                     );
 
