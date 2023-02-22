@@ -10,13 +10,15 @@ abstract class Repository {
   Future<String> login(User user);
   // Future addPhoto(String url);
   Future addTag(String tag);
-  Future<User> feed();
+  Future<List<User>> feed();
   Future like(String userId);
   Future dislike(String userId);
   Future<User> matches();
 }
 
 const String baseUrl = 'find-friends.fly.dev';
+const String token =
+    'Eo5k70Ze7wR9upSursFgcNJMyh4+PexD3MmnUa9NsqDXrjrcwENO09YIVEgaYA8kZC4sl+4OJnU+vG3rYxZ0GQ==';
 
 class RepositoryImpl implements Repository {
   @override
@@ -41,8 +43,7 @@ class RepositoryImpl implements Repository {
 
     request.headers.addAll({
       'accept': 'application/json',
-      'X-Token':
-          'aCQexsEq0A99CXd2iWdgW5HkGPwPgdwCOPWbz2sRJ/CJQu8nuZnQKabJ6nYmMVoZ1BM2CJMgXDAq+APoAOuNWQ==',
+      'X-Token': token,
       'Content-Type': 'multipart/form-data',
     });
 
@@ -57,8 +58,7 @@ class RepositoryImpl implements Repository {
 
     final response = await http.get(url, headers: {
       'accept': 'application/json',
-      'X-Token':
-          'aCQexsEq0A99CXd2iWdgW5HkGPwPgdwCOPWbz2sRJ/CJQu8nuZnQKabJ6nYmMVoZ1BM2CJMgXDAq+APoAOuNWQ==',
+      'X-Token': token,
     });
     return response.bodyBytes;
   }
@@ -76,9 +76,19 @@ class RepositoryImpl implements Repository {
   }
 
   @override
-  Future<User> feed() {
-    // TODO: implement feed
-    throw UnimplementedError();
+  Future<List<User>> feed() async {
+    final url = Uri.https(
+      baseUrl,
+      '/feed',
+    );
+
+    final response = await http.get(url, headers: {
+      'accept': 'application/json',
+      'X-Token': token,
+    });
+    final mp = jsonDecode(response.body);
+    final us = (mp['users'] as List).map((e) => User.fromJson(e)).toList();
+    return us;
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'package:client/routes/feed.dart';
 import 'package:client/routes/upload_photo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -19,9 +20,8 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return const ProviderScope(
       child: MaterialApp(
-        home: UploadPhoto(),
+        home: FeedScreen(),
       ),
     );
   }
 }
-

@@ -74,6 +74,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     );
 
                     if (token.isNotEmpty) {
+                      print('registered. token: $token');
                       Navigator.of(context).push(MaterialPageRoute(builder: (_) => UploadPhoto()));
                     }
                   },

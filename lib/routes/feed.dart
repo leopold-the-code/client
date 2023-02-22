@@ -1,3 +1,4 @@
+import 'package:client/data/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 
@@ -13,13 +14,16 @@ class FeedScreen extends StatefulWidget {
 class _FeedScreenState extends State<FeedScreen> {
   late MatchEngine _matchEngine;
   List<User> users = [];
-
   @override
-  void initState() {
-    super.initState();
-    for (int i = 1; i < 5; i++) {
-      users.add(generateUser(i));
-    }
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    RepositoryImpl().feed().then((value) {
+      users.addAll(value);
+      _matchEngine =
+          MatchEngine(swipeItems: <SwipeItem>[...users.map((u) => SwipeItem(content: u)).toList()]);
+      setState(() {});
+    });
     _matchEngine =
         MatchEngine(swipeItems: <SwipeItem>[...users.map((u) => SwipeItem(content: u)).toList()]);
   }
@@ -41,12 +45,33 @@ class _FeedScreenState extends State<FeedScreen> {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('assets/ranger_${index + 1}.jpeg'),
+                      image: AssetImage('assets/ranger_${(index % 4 + 1)}.jpeg'),
                     ),
                   ),
-                  child: Text(
-                    users[index].name,
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        users[index].name,
+                        style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                          backgroundColor: Colors.white,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Text(
+                        users[index].description,
+                        style: TextStyle(
+                          fontSize: 20,
+                          // fontWeight: FontWeight.bold,
+                          backgroundColor: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
                 );
               }),
