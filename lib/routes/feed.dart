@@ -31,6 +31,7 @@ class _FeedScreenState extends State<FeedScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('Feed')),
       body: Center(
         child: Container(
           width: 300,

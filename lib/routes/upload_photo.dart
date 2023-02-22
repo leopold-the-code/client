@@ -28,66 +28,68 @@ class _UploadPhotoState extends State<UploadPhoto> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          children: [
-            SizedBox(
-              width: 500,
-              height: 500,
-              child: FutureBuilder<List<Uint8List>>(
-                future: _load(),
-                builder: ((context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return SizedBox();
-                  }
+      appBar: AppBar(title: Text('Upload image')),
+      body: Column(
+        children: [
+          SizedBox(
+            width: 500,
+            height: 500,
+            child: FutureBuilder<List<Uint8List>>(
+              future: _load(),
+              builder: ((context, snapshot) {
+                if (!snapshot.hasData) {
+                  return SizedBox();
+                }
 
-                  return GridView.count(
-                    crossAxisCount: 2,
-                    // maxCrossAxisExtent: 400,
-                    children: [
-                      ...snapshot.data!.map(
-                        (e) {
-                          return _Wrapper(child: Image.memory(e));
-                        },
-                      ).toList(),
-                      _Wrapper(child: _PickImageButton(
-                        onTap: () async {
-                          final _chosenImage = await _picker.pickImage(source: ImageSource.gallery);
-                          if (_chosenImage == null) return;
-                          _localImageStore.add(_chosenImage);
-                          await RepositoryImpl().uploadImage(_chosenImage.path);
-                          setState(() {});
-                        },
-                      )),
-                    ],
-                  );
-                }),
-              ),
+                return GridView.count(
+                  crossAxisCount: 2,
+                  // maxCrossAxisExtent: 400,
+                  children: [
+                    ...snapshot.data!.map(
+                      (e) {
+                        return _Wrapper(child: Image.memory(e));
+                      },
+                    ).toList(),
+                    _Wrapper(child: _PickImageButton(
+                      onTap: () async {
+                        final _chosenImage = await _picker.pickImage(source: ImageSource.gallery);
+                        if (_chosenImage == null) return;
+                        _localImageStore.add(_chosenImage);
+                        await RepositoryImpl().uploadImage(_chosenImage.path);
+                        setState(() {});
+                      },
+                    )),
+                  ],
+                );
+              }),
             ),
-            SizedBox(
-              width: 200,
-              height: 200,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    child: Text('clear'),
-                    onPressed: () async {
-                      _localImageStore.clear();
-                      setState(() {});
-                    },
-                  ),
-                  ElevatedButton(
-                    child: Text('next'),
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => MyProfile()));
-                    },
-                  ),
-                ],
-              ),
+          ),
+          SizedBox(
+            width: 200,
+            // height: 100,
+            child: Column(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  child: Text('clear'),
+                  onPressed: () async {
+                    _localImageStore.clear();
+                    setState(() {});
+                  },
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                ElevatedButton(
+                  child: Text('next'),
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => MyProfile()));
+                  },
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
