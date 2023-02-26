@@ -1,6 +1,3 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-@freezed
 class User {
   const User({
     required this.email,
@@ -20,7 +17,7 @@ class User {
   final String? surname;
   final int? id;
 
-  factory User.test() => User(
+  factory User.test() => const User(
         email: 'test.mail.com',
         name: 'test name',
         yearOfBirth: 2001,

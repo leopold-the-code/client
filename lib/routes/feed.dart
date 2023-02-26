@@ -1,8 +1,10 @@
+import 'package:client/app.dart';
 import 'package:client/data/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 
 import '../data/user.dart';
+import 'app_state.dart';
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({super.key});
@@ -16,8 +18,8 @@ class _FeedScreenState extends State<FeedScreen> {
   List<User> users = [];
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
+    print('dep feed');
     RepositoryImpl().feed().then((value) {
       users.addAll(value);
       _matchEngine =
@@ -32,6 +34,17 @@ class _FeedScreenState extends State<FeedScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Feed')),
+      floatingActionButton: FloatingActionButton(
+        child: Text('logout'),
+        onPressed: () {
+          AppScope.of(context)?.token = '';
+          AppScope.of(context)?.setState(() {
+            
+          });
+          // Navigator.of(context).pushNamed(Routes.init.name);
+          // setState(() {});
+        },
+      ),
       body: Center(
         child: Container(
           width: 300,
