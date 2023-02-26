@@ -1,5 +1,8 @@
 import 'package:client/routes/app_state.dart';
 import 'package:client/routes/feed.dart';
+import 'package:client/routes/home.dart';
+import 'package:client/routes/profile.dart';
+import 'package:client/routes/tag_screen.dart';
 import 'package:client/routes/upload_photo.dart';
 import 'package:flutter/material.dart';
 
@@ -13,13 +16,16 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppScope(
       child: MaterialApp(
-        home: const InitialScreen(),
+        home: const LoginScreen(),
         routes: {
           Routes.init.name: (context) => const InitialScreen(),
           Routes.register.name: (context) => const RegistrationScreen(),
           Routes.login.name: (context) => const LoginScreen(),
           Routes.uploadImage.name: (context) => const UploadPhoto(),
+          Routes.home.name: (context) => const HomeScreen(),
           Routes.feed.name: (context) => const FeedScreen(),
+          Routes.profile.name: (context) => const MyProfile(),
+          Routes.tags.name: (context) => const TagScreen(),
         },
       ),
     );
@@ -63,7 +69,8 @@ enum Routes {
   feed('/feed'),
   uploadImage('/upload_image'),
   tags('/tags'),
-  profile('/profile');
+  profile('/profile'),
+  home('/home');
 
   final String name;
   const Routes(this.name);

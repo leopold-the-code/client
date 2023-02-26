@@ -1,18 +1,18 @@
 class User {
   const User({
     required this.email,
-    required this.name,
-    required this.yearOfBirth,
-    required this.description,
+    this.name,
+    this.yearOfBirth,
+    this.description,
     this.password,
     this.surname,
     this.id,
   });
 
   final String email;
-  final String name;
-  final int yearOfBirth;
-  final String description;
+  final String? name;
+  final int? yearOfBirth;
+  final String? description;
   final String? password;
   final String? surname;
   final int? id;
@@ -36,9 +36,9 @@ class User {
   Map<String, String> toJson() {
     return {
       'email': email,
-      'name': name,
+      'name': name ?? '',
       'birth_date': yearOfBirth.toString(),
-      'description': description,
+      'description': description ?? '',
       'password': password ?? '',
       'surname': surname ?? '',
     };

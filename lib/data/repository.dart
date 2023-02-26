@@ -24,6 +24,7 @@ class RepositoryImpl implements Repository {
   @override
   Future<String> register(User user, String password) async {
     final url = Uri.https(baseUrl, '/register');
+    print(user.toJson());
     final response = await http.post(url,
         headers: {'Content-Type': 'application/json'}, body: jsonEncode(user.toJson()));
     return response.body;
@@ -64,10 +65,7 @@ class RepositoryImpl implements Repository {
   }
 
   @override
-  Future addTag(String tag) {
-    // TODO: implement addTag
-    throw UnimplementedError();
-  }
+  Future addTag(String tag) async {}
 
   @override
   Future dislike(String userId) {

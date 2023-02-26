@@ -1,3 +1,4 @@
+import 'package:client/app.dart';
 import 'package:client/data/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -8,21 +9,40 @@ class MyProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Container(
-      child: FutureBuilder(
-        future: RepositoryImpl().getImage(1),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return SizedBox();
-          }
-          return Image.memory(
-            snapshot.data!,
-            width: 200,
-            height: 200,
-          );
-        },
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          FutureBuilder(
+            future: RepositoryImpl().getImage(1),
+            builder: ((context, snapshot) {
+              final img = snapshot.data;
+              if (img == null) {
+                return SizedBox();
+              }
+              return SizedBox(width: 300, child: Image.memory(img));
+            }),
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(Routes.uploadImage.name);
+            },
+            child: Text('Uplaod image'),
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(Routes.tags.name);
+            },
+            child: Text('Add tag'),
+          ),
+        ],
       ),
-    ));
+    );
   }
 }

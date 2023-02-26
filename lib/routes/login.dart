@@ -26,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Registration')),
+      appBar: AppBar(title: Text('Login')),
       body: Center(
         child: SizedBox(
           width: 300,
@@ -49,15 +49,19 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               ElevatedButton(
                   onPressed: () async {
+                    if (emailCtlr.text.isEmpty || pswdCtlr.text.isEmpty) {
+                      return;
+                    }
+
                     final token = await RepositoryImpl().register(
-                      User.test(),
+                      User(email: emailCtlr.text),
                       pswdCtlr.text,
                     );
 
                     if (token.isNotEmpty) {
                       print('registered. token: $token');
                       AppScope.of(context)?.token = token;
-                      Navigator.of(context).pushNamed(Routes.feed.name);
+                      Navigator.of(context).pushNamed(Routes.home.name);
                     }
                   },
                   child: Text('next')),

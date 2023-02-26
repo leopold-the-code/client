@@ -83,7 +83,7 @@ class _UploadPhotoState extends State<UploadPhoto> {
                 ElevatedButton(
                   child: Text('next'),
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => MyProfile()));
+                    Navigator.of(context).pop();
                   },
                 ),
               ],

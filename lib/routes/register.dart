@@ -1,3 +1,4 @@
+import 'package:client/app.dart';
 import 'package:client/data/repository.dart';
 import 'package:client/data/user.dart';
 import 'package:client/routes/upload_photo.dart';
@@ -17,6 +18,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final TextEditingController nameCtlr = TextEditingController();
   final TextEditingController yearCtlr = TextEditingController();
   final TextEditingController descCtlr = TextEditingController();
+
+  @override
+  void dispose() {
+    emailCtlr.dispose();
+    pswdCtlr.dispose();
+    yearCtlr.dispose();
+    nameCtlr.dispose();
+    descCtlr.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,13 +54,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 controller: nameCtlr,
                 decoration: InputDecoration(hintText: 'name'),
               ),
-              // CalendarDatePicker(
-              //   initialDate: DateTime(2001),
-              //   firstDate: DateTime(1995),
-              //   lastDate: DateTime(2010),
-              //   onDateChanged: (_) {},
-              //   initialCalendarMode: DatePickerMode.year,
-              // ),
               TextField(
                 controller: yearCtlr,
                 decoration: InputDecoration(hintText: 'year of birth'),
@@ -64,19 +68,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ElevatedButton(
                   onPressed: () async {
                     final token = await RepositoryImpl().register(
-                      User.test(),
-                      // User(
-                      //   // email: emailCtlr.text,
-                      //   // name: nameCtlr.text,
-                      //   // yearOfBirth: 2001,
-                      //   // description: descCtlr.text,
-                      // ),
+                      User(
+                        email: emailCtlr.text,
+                        name: nameCtlr.text,
+                        yearOfBirth: 2001,
+                        description: descCtlr.text,
+                      ),
                       pswdCtlr.text,
                     );
 
                     if (token.isNotEmpty) {
                       print('registered. token: $token');
-                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => UploadPhoto()));
+                      Navigator.of(context).pushNamed(Routes.home.name);
                     }
                   },
                   child: Text('next')),
@@ -85,15 +88,5 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    emailCtlr.dispose();
-    pswdCtlr.dispose();
-    yearCtlr.dispose();
-    nameCtlr.dispose();
-    descCtlr.dispose();
-    super.dispose();
   }
 }
