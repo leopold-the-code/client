@@ -31,43 +31,68 @@ class _FeedScreenState extends State<FeedScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final sz = MediaQuery.of(context).size;
+    final h = sz.height / 2;
+
     return Center(
-      child: Container(
-        width: 300,
-        height: 300,
+      child: SizedBox(
+        height: h,
         child: SwipeCards(
             matchEngine: _matchEngine,
             onStackFinished: () {
               print('finished');
             },
             itemBuilder: (context, index) {
+              final imgs = users[index].images;
+
               return Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/ranger_${(index % 4 + 1)}.jpeg'),
-                  ),
+                  // borderRadius: BorderRadius.circular(20),
+                  image: imgs.isNotEmpty
+                      ? DecorationImage(
+                          image: NetworkImage(imgs.first, headers: {
+                          'accept': 'application/json',
+                          'X-Token': RepositoryImpl.token,
+                        }))
+                      : DecorationImage(image: AssetImage('assets/ranger_${(index % 4 + 1)}.jpeg')),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      users[index].name ?? '',
+                      users[index].email,
                       style: TextStyle(
-                        fontSize: 30,
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                         backgroundColor: Colors.white,
                       ),
                     ),
-                    SizedBox(
-                      height: 30,
+                    SizedBox(height: 10),
+                    Text(
+                      users[index].name ?? '',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        backgroundColor: Colors.white,
+                      ),
                     ),
+                    SizedBox(height: 10),
                     Text(
                       users[index].description ?? '',
                       style: TextStyle(
                         fontSize: 20,
                         // fontWeight: FontWeight.bold,
+                        backgroundColor: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'tags: ${users[index].tags.join(',')}',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
                         backgroundColor: Colors.white,
                       ),
                     ),

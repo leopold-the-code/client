@@ -16,7 +16,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppScope(
       child: MaterialApp(
-        home: const LoginScreen(),
+        home: const InitialScreen(),
         routes: {
           Routes.init.name: (context) => const InitialScreen(),
           Routes.register.name: (context) => const RegistrationScreen(),

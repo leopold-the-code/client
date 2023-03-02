@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 
 abstract class Repository {
   Future<String> register(User user, String password);
-  Future<String> login(User user);
+  Future<String> login(String email, String password);
   // Future addPhoto(String url);
   Future addTag(String tag);
   Future<List<User>> feed();
@@ -17,17 +17,36 @@ abstract class Repository {
 }
 
 const String baseUrl = 'find-friends.fly.dev';
-const String token =
-    'Eo5k70Ze7wR9upSursFgcNJMyh4+PexD3MmnUa9NsqDXrjrcwENO09YIVEgaYA8kZC4sl+4OJnU+vG3rYxZ0GQ==';
+// const String token =
+//     'Eo5k70Ze7wR9upSursFgcNJMyh4+PexD3MmnUa9NsqDXrjrcwENO09YIVEgaYA8kZC4sl+4OJnU+vG3rYxZ0GQ==';
 
 class RepositoryImpl implements Repository {
+  static String token = '';
+
   @override
   Future<String> register(User user, String password) async {
     final url = Uri.https(baseUrl, '/register');
     print(user.toJson());
     final response = await http.post(url,
         headers: {'Content-Type': 'application/json'}, body: jsonEncode(user.toJson()));
-    return response.body;
+    final json = jsonDecode(response.body);
+    final token = json['token'] as String?;
+    if (token == null) {
+      throw Exception(response.body);
+    }
+    return token;
+  }
+
+  @override
+  Future<String> login(String email, String password) async {
+    final url = Uri.https(baseUrl, '/login', {'email': email, 'password': password});
+    final response = await http.post(url, headers: {'Content-Type': 'application/json'});
+    final json = jsonDecode(response.body);
+    final token = json['token'] as String?;
+    if (token == null) {
+      throw Exception(response.body);
+    }
+    return token;
   }
 
   @override
@@ -95,11 +114,11 @@ class RepositoryImpl implements Repository {
     throw UnimplementedError();
   }
 
-  @override
-  Future<String> login(User user) {
-    // TODO: implement login
-    throw UnimplementedError();
-  }
+  // @override
+  // Future<String> login(User user) {
+  //   // TODO: implement login
+  //   throw UnimplementedError();
+  // }
 
   @override
   Future<User> matches() {

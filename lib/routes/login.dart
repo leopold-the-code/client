@@ -15,6 +15,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailCtlr = TextEditingController();
   final TextEditingController pswdCtlr = TextEditingController();
+  String _t = '';
 
   @override
   void dispose() {
@@ -53,18 +54,22 @@ class _LoginScreenState extends State<LoginScreen> {
                       return;
                     }
 
-                    final token = await RepositoryImpl().register(
-                      User(email: emailCtlr.text),
+                    final token = await RepositoryImpl().login(
+                      emailCtlr.text,
                       pswdCtlr.text,
                     );
+
+                    _t = token;
 
                     if (token.isNotEmpty) {
                       print('registered. token: $token');
                       AppScope.of(context)?.token = token;
+                      RepositoryImpl.token = token;
                       Navigator.of(context).pushNamed(Routes.home.name);
                     }
                   },
                   child: Text('next')),
+              Text(_t),
             ],
           ),
         ),

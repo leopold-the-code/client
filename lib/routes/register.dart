@@ -18,6 +18,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final TextEditingController nameCtlr = TextEditingController();
   final TextEditingController yearCtlr = TextEditingController();
   final TextEditingController descCtlr = TextEditingController();
+  String _errorText = '';
 
   @override
   void dispose() {
@@ -67,22 +68,26 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               SizedBox(height: 20),
               ElevatedButton(
                   onPressed: () async {
-                    final token = await RepositoryImpl().register(
-                      User(
-                        email: emailCtlr.text,
-                        name: nameCtlr.text,
-                        yearOfBirth: 2001,
-                        description: descCtlr.text,
-                      ),
-                      pswdCtlr.text,
-                    );
-
-                    if (token.isNotEmpty) {
-                      print('registered. token: $token');
-                      Navigator.of(context).pushNamed(Routes.home.name);
+                    try {
+                      final token = await RepositoryImpl().register(
+                        User(
+                          email: emailCtlr.text,
+                          name: nameCtlr.text,
+                          yearOfBirth: 2001,
+                          description: descCtlr.text,
+                        ),
+                        pswdCtlr.text,
+                      );
+                      debugPrint(token);
+                      Navigator.pop(context);
+                    } catch (e) {
+                      setState(() {
+                        _errorText = e.toString();
+                      });
                     }
                   },
-                  child: Text('next')),
+                  child: Text('Submit')),
+              Text(_errorText),
             ],
           ),
         ),
