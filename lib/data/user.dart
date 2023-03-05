@@ -1,34 +1,23 @@
 class User {
   const User({
-    required this.email,
-    this.name,
-    this.yearOfBirth,
-    this.description,
-    this.password,
-    this.surname,
     this.id,
+    required this.email,
+    required this.name,
+    required this.yearOfBirth,
+    required this.description,
+    this.password,
     this.tags = const [],
     this.images = const [],
   });
 
-  final String email;
-  final String? name;
-  final int? yearOfBirth;
-  final String? description;
-  final String? password;
-  final String? surname;
   final int? id;
+  final String email;
+  final String? password;
+  final String name;
+  final int yearOfBirth;
+  final String description;
   final List<String> tags;
   final List<String> images;
-
-  // factory User.test() => const User(
-  //       email: 'test.mail.com',
-  //       name: 'test name',
-  //       yearOfBirth: 2001,
-  //       description: 'desc1',
-  //       password: 'psw1',
-  //       surname: 'surname1',
-  //     );
 
   factory User.fromJson(Map<String, dynamic> json) => User(
         email: json['email'] as String,
@@ -43,13 +32,11 @@ class User {
 
   Map<String, String> toJson() {
     return {
-      'email': email,
-      'name': name ?? '',
+      if (email.isNotEmpty) 'email': email,
+      if (name.isNotEmpty) 'name': name,
       'birth_date': yearOfBirth.toString(),
-      'description': description ?? '',
-      'password': password ?? '',
-      'surname': surname ?? '',
+      if (description.isNotEmpty) 'description': description,
+      if (password?.isNotEmpty == true) 'password': password!,
     };
   }
 }
-// 'demotoken'

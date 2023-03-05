@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 
 import '../data/user.dart';
-import 'app_state.dart';
+import '../app_state.dart';
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({super.key});
@@ -71,7 +71,7 @@ class _FeedScreenState extends State<FeedScreen> {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      users[index].name ?? '',
+                      users[index].name,
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -80,7 +80,7 @@ class _FeedScreenState extends State<FeedScreen> {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      users[index].description ?? '',
+                      users[index].description,
                       style: TextStyle(
                         fontSize: 20,
                         // fontWeight: FontWeight.bold,

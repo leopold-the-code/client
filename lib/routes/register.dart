@@ -1,12 +1,15 @@
-import 'package:client/app.dart';
+import 'package:client/app_state.dart';
 import 'package:client/data/repository.dart';
 import 'package:client/data/user.dart';
-import 'package:client/routes/upload_photo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class RegistrationScreen extends StatefulWidget {
-  const RegistrationScreen({super.key});
+  const RegistrationScreen({
+    super.key,
+    this.isUpdateProfile = false,
+  });
+  final bool isUpdateProfile;
 
   @override
   State<RegistrationScreen> createState() => _RegistrationScreenState();
@@ -21,6 +24,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String _errorText = '';
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.isUpdateProfile) {
+      final me = AppScope.of(context)!.me!;
+      emailCtlr.text = me.email;
+      nameCtlr.text = me.name;
+      yearCtlr.text = me.yearOfBirth.toString();
+      descCtlr.text = me.description;
+    }
+  }
+
+  @override
   void dispose() {
     emailCtlr.dispose();
     pswdCtlr.dispose();
@@ -33,14 +48,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Registration')),
+      appBar: AppBar(title: Text(widget.isUpdateProfile ? 'Update profile' : 'Registration')),
       body: Center(
         child: SizedBox(
           width: 300,
           height: 400,
           child: Column(
             children: [
-              Text('Registration'),
+              // Text('Registration'),
               TextField(
                 controller: emailCtlr,
                 decoration: InputDecoration(hintText: 'email'),
@@ -69,16 +84,27 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ElevatedButton(
                   onPressed: () async {
                     try {
-                      final token = await RepositoryImpl().register(
-                        User(
-                          email: emailCtlr.text,
-                          name: nameCtlr.text,
-                          yearOfBirth: 2001,
-                          description: descCtlr.text,
-                        ),
-                        pswdCtlr.text,
-                      );
-                      debugPrint(token);
+                      if (widget.isUpdateProfile) {
+                        final upd = await RepositoryImpl().updateProfile(
+                          User(
+                            email: emailCtlr.text,
+                            password: pswdCtlr.text.isNotEmpty ? pswdCtlr.text : null,
+                            name: nameCtlr.text,
+                            yearOfBirth: int.parse(yearCtlr.text),
+                            description: descCtlr.text,
+                          ),
+                        );
+                      } else {
+                        final token = await RepositoryImpl().register(
+                          User(
+                              email: emailCtlr.text,
+                              name: nameCtlr.text,
+                              yearOfBirth: 2001,
+                              description: descCtlr.text,
+                              password: pswdCtlr.text),
+                        );
+                        debugPrint(token);
+                      }
                       Navigator.pop(context);
                     } catch (e) {
                       setState(() {

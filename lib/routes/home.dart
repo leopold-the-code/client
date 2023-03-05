@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 
 import '../data/user.dart';
-import 'app_state.dart';
+import '../app_state.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

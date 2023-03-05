@@ -1,4 +1,4 @@
-import 'package:client/routes/app_state.dart';
+import 'package:client/app_state.dart';
 import 'package:client/routes/feed.dart';
 import 'package:client/routes/home.dart';
 import 'package:client/routes/profile.dart';
@@ -6,6 +6,7 @@ import 'package:client/routes/tag_screen.dart';
 import 'package:client/routes/upload_photo.dart';
 import 'package:flutter/material.dart';
 
+import 'data/user.dart';
 import 'routes/login.dart';
 import 'routes/register.dart';
 
@@ -26,6 +27,7 @@ class App extends StatelessWidget {
           Routes.feed.name: (context) => const FeedScreen(),
           Routes.profile.name: (context) => const MyProfile(),
           Routes.tags.name: (context) => const TagScreen(),
+          Routes.updateProfile.name: (context) => const RegistrationScreen(isUpdateProfile: true),
         },
       ),
     );
@@ -66,11 +68,13 @@ enum Routes {
   init('/init'),
   register('/register'),
   login('/login'),
+
+  home('/home'),
   feed('/feed'),
+  profile('/profile'),
   uploadImage('/upload_image'),
   tags('/tags'),
-  profile('/profile'),
-  home('/home');
+  updateProfile('/update_profile');
 
   final String name;
   const Routes(this.name);

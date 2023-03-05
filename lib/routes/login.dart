@@ -1,7 +1,7 @@
 import 'package:client/app.dart';
 import 'package:client/data/repository.dart';
 import 'package:client/data/user.dart';
-import 'package:client/routes/app_state.dart';
+import 'package:client/app_state.dart';
 import 'package:client/routes/feed.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +15,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailCtlr = TextEditingController();
   final TextEditingController pswdCtlr = TextEditingController();
-  String _t = '';
 
   @override
   void dispose() {
@@ -59,17 +58,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       pswdCtlr.text,
                     );
 
-                    _t = token;
-
                     if (token.isNotEmpty) {
                       print('registered. token: $token');
                       AppScope.of(context)?.token = token;
                       RepositoryImpl.token = token;
+
+                      final me = await RepositoryImpl().me();
+                      AppScope.of(context)?.me = me;
                       Navigator.of(context).pushNamed(Routes.home.name);
                     }
                   },
                   child: Text('next')),
-              Text(_t),
             ],
           ),
         ),

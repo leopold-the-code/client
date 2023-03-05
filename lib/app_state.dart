@@ -1,3 +1,4 @@
+import 'package:client/data/user.dart';
 import 'package:flutter/material.dart';
 
 class AppScope extends StatefulWidget {
@@ -21,6 +22,7 @@ class AppScope extends StatefulWidget {
 
 class _AppScopeState extends State<AppScope> {
   String? token;
+  User? me;
 
   @override
   Widget build(BuildContext context) => _InheritedScope(

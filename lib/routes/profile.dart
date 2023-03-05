@@ -1,45 +1,81 @@
 import 'package:client/app.dart';
+import 'package:client/app_state.dart';
 import 'package:client/data/repository.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 
-class MyProfile extends StatelessWidget {
+class MyProfile extends StatefulWidget {
   const MyProfile({super.key});
 
   @override
+  State<MyProfile> createState() => _MyProfileState();
+}
+
+class _MyProfileState extends State<MyProfile> {
+  TextStyle get style => TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
+
+  @override
+  void initState() {
+    super.initState();
+    RepositoryImpl()
+        .me()
+        .then((value) => AppScope.of(context)?.me = value)
+        .then((value) => mounted ? setState(() {}) : null);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Center(
+    final me = AppScope.of(context)!.me!;
+    return Padding(
+      padding: const EdgeInsets.all(16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          FutureBuilder(
-            future: RepositoryImpl().getImage(1),
-            builder: ((context, snapshot) {
-              final img = snapshot.data;
-              if (img == null) {
-                return SizedBox();
-              }
-              return SizedBox(width: 300, child: Image.memory(img));
-            }),
+          Text(
+            'Email: ${me.email}',
+            style: style,
           ),
-          const SizedBox(
-            height: 30,
+          Text(
+            'Name: ${me.name}',
+            style: style,
           ),
+          Text(
+            'Description: ${me.description}',
+            style: style,
+          ),
+          Text(
+            'Year of birth: ${me.yearOfBirth}',
+            style: style,
+          ),
+          Text(
+            'Tags: ${me.tags}',
+            style: style,
+          ),
+          const SizedBox(height: 20),
+          if (me.images.isEmpty)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Text('No uploaded image found'),
+            ),
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pushNamed(Routes.uploadImage.name);
             },
-            child: Text('Uplaod image'),
+            child: Text('Upload image'),
           ),
-          const SizedBox(
-            height: 30,
-          ),
+          const SizedBox(height: 10),
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pushNamed(Routes.tags.name);
             },
             child: Text('Add tag'),
+          ),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(Routes.updateProfile.name);
+            },
+            child: Text('Update profile data'),
           ),
         ],
       ),

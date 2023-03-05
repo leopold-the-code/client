@@ -1,3 +1,4 @@
+import 'package:client/app_state.dart';
 import 'package:client/data/repository.dart';
 import 'package:client/routes/feed.dart';
 import 'package:client/routes/profile.dart';
@@ -19,6 +20,14 @@ class _UploadPhotoState extends State<UploadPhoto> {
 
   Future<List<Uint8List>> _load() async {
     _loadedFiles.clear();
+
+    final serverImages = AppScope.of(context)!.me!.images;
+    final repo = RepositoryImpl();
+    for (var img in serverImages) {
+      final bytes = await repo.getImage(int.parse(img.split('/').last));
+      _loadedFiles.add(bytes);
+    }
+
     for (var img in _localImageStore) {
       _loadedFiles.add(await img.readAsBytes());
     }
@@ -38,7 +47,7 @@ class _UploadPhotoState extends State<UploadPhoto> {
               future: _load(),
               builder: ((context, snapshot) {
                 if (!snapshot.hasData) {
-                  return SizedBox();
+                  return Center(child: CircularProgressIndicator());
                 }
 
                 return GridView.count(
@@ -70,18 +79,18 @@ class _UploadPhotoState extends State<UploadPhoto> {
             child: Column(
               // mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                // ElevatedButton(
+                //   child: Text('clear'),
+                //   onPressed: () async {
+                //     _localImageStore.clear();
+                //     setState(() {});
+                //   },
+                // ),
+                // SizedBox(
+                //   height: 10,
+                // ),
                 ElevatedButton(
-                  child: Text('clear'),
-                  onPressed: () async {
-                    _localImageStore.clear();
-                    setState(() {});
-                  },
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                ElevatedButton(
-                  child: Text('next'),
+                  child: Text('Submit'),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
