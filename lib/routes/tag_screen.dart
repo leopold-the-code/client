@@ -22,20 +22,20 @@ class _TagScreenState extends State<TagScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Tags')),
+      appBar: AppBar(title: const Text('Tags')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Enter your fields of interest'),
-            SizedBox(height: 20),
+            const Text('Enter your fields of interest'),
+            const SizedBox(height: 20),
             Builder(builder: (context) {
               final width = MediaQuery.of(context).size.width / 2;
               return SizedBox(
                 width: width,
                 child: TextFieldTags(
                   textfieldTagsController: _controller,
-                  initialTags: const ['history', 'art', 'it'],
+                  initialTags: const [],
                   textSeparators: const [' ', ','],
                   letterCase: LetterCase.small,
                   inputfieldBuilder: (context, tec, fn, error, onChanged, onSubmitted) {
@@ -50,7 +50,7 @@ class _TagScreenState extends State<TagScreen> {
                                   children: tags.map((String tag) {
                                 return Container(
                                   decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
+                                      borderRadius: const BorderRadius.all(
                                         Radius.circular(20.0),
                                       ),
                                       color: Colors.blue.withOpacity(0.3)),
@@ -62,7 +62,7 @@ class _TagScreenState extends State<TagScreen> {
                                     children: [
                                       InkWell(
                                         child: Text(
-                                          '$tag',
+                                          tag,
                                           style: const TextStyle(color: Colors.black),
                                         ),
                                         onTap: () {
@@ -85,13 +85,13 @@ class _TagScreenState extends State<TagScreen> {
                                 );
                               }).toList()),
                             ),
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           TextField(
                             controller: tec,
                             focusNode: textFieldFocusNode,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               isDense: true,
-                              border: const OutlineInputBorder(),
+                              border: OutlineInputBorder(),
                               hintText: 'Enter tag...',
                             ),
                             onChanged: onChanged,
@@ -104,19 +104,19 @@ class _TagScreenState extends State<TagScreen> {
                 ),
               );
             }),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 final tags = _controller.getTags;
                 if (tags == null) {
                   return;
                 }
                 for (var t in tags) {
-                  RepositoryImpl().addTag(t);
+                  await RepositoryImpl().addTag(t);
                 }
                 Navigator.of(context).pop();
               },
-              child: Text('Submit'),
+              child: const Text('Submit'),
             ),
           ],
         ),

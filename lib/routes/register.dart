@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class RegistrationScreen extends StatefulWidget {
+  final bool isUpdateProfile;
   const RegistrationScreen({
     super.key,
     this.isUpdateProfile = false,
   });
-  final bool isUpdateProfile;
 
   @override
   State<RegistrationScreen> createState() => _RegistrationScreenState();
@@ -24,28 +24,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String _errorText = '';
 
   @override
-  void initState() {
-    super.initState();
-    if (widget.isUpdateProfile) {
-      final me = AppScope.of(context)!.me!;
-      emailCtlr.text = me.email;
-      nameCtlr.text = me.name;
-      yearCtlr.text = me.yearOfBirth.toString();
-      descCtlr.text = me.description;
-    }
-  }
-
-  @override
-  void dispose() {
-    emailCtlr.dispose();
-    pswdCtlr.dispose();
-    yearCtlr.dispose();
-    nameCtlr.dispose();
-    descCtlr.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.isUpdateProfile ? 'Update profile' : 'Registration')),
@@ -58,29 +36,29 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               // Text('Registration'),
               TextField(
                 controller: emailCtlr,
-                decoration: InputDecoration(hintText: 'email'),
+                decoration: const InputDecoration(hintText: 'email'),
                 keyboardType: TextInputType.emailAddress,
               ),
               TextField(
                 controller: pswdCtlr,
-                decoration: InputDecoration(hintText: 'password'),
+                decoration: const InputDecoration(hintText: 'password'),
                 obscureText: true,
               ),
               TextField(
                 controller: nameCtlr,
-                decoration: InputDecoration(hintText: 'name'),
+                decoration: const InputDecoration(hintText: 'name'),
               ),
               TextField(
                 controller: yearCtlr,
-                decoration: InputDecoration(hintText: 'year of birth'),
+                decoration: const InputDecoration(hintText: 'year of birth'),
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               ),
               TextField(
                 controller: descCtlr,
-                decoration: InputDecoration(hintText: 'description'),
+                decoration: const InputDecoration(hintText: 'description'),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                   onPressed: () async {
                     try {
@@ -112,12 +90,34 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       });
                     }
                   },
-                  child: Text('Submit')),
+                  child: const Text('Submit')),
               Text(_errorText),
             ],
           ),
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    emailCtlr.dispose();
+    pswdCtlr.dispose();
+    yearCtlr.dispose();
+    nameCtlr.dispose();
+    descCtlr.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.isUpdateProfile) {
+      final me = AppScope.of(context)!.me!;
+      emailCtlr.text = me.email;
+      nameCtlr.text = me.name;
+      yearCtlr.text = me.yearOfBirth.toString();
+      descCtlr.text = me.description;
+    }
   }
 }

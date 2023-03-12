@@ -1,7 +1,5 @@
 import 'package:client/app_state.dart';
 import 'package:client/data/repository.dart';
-import 'package:client/routes/feed.dart';
-import 'package:client/routes/profile.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -37,7 +35,7 @@ class _UploadPhotoState extends State<UploadPhoto> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Upload image')),
+      appBar: AppBar(title: const Text('Upload image')),
       body: Column(
         children: [
           SizedBox(
@@ -47,7 +45,7 @@ class _UploadPhotoState extends State<UploadPhoto> {
               future: _load(),
               builder: ((context, snapshot) {
                 if (!snapshot.hasData) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
 
                 return GridView.count(
@@ -61,10 +59,10 @@ class _UploadPhotoState extends State<UploadPhoto> {
                     ).toList(),
                     _Wrapper(child: _PickImageButton(
                       onTap: () async {
-                        final _chosenImage = await _picker.pickImage(source: ImageSource.gallery);
-                        if (_chosenImage == null) return;
-                        _localImageStore.add(_chosenImage);
-                        await RepositoryImpl().uploadImage(_chosenImage.path);
+                        final chosenImage = await _picker.pickImage(source: ImageSource.gallery);
+                        if (chosenImage == null) return;
+                        _localImageStore.add(chosenImage);
+                        await RepositoryImpl().uploadImage(chosenImage.path);
                         setState(() {});
                       },
                     )),
@@ -90,7 +88,7 @@ class _UploadPhotoState extends State<UploadPhoto> {
                 //   height: 10,
                 // ),
                 ElevatedButton(
-                  child: Text('Submit'),
+                  child: const Text('Submit'),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -106,7 +104,6 @@ class _UploadPhotoState extends State<UploadPhoto> {
 
 class _PickImageButton extends StatelessWidget {
   const _PickImageButton({
-    super.key,
     required this.onTap,
   });
   final VoidCallback onTap;
@@ -115,7 +112,7 @@ class _PickImageButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Icon(
+      child: const Icon(
         Icons.add,
         size: 48,
       ),
@@ -125,7 +122,6 @@ class _PickImageButton extends StatelessWidget {
 
 class _Wrapper extends StatelessWidget {
   const _Wrapper({
-    super.key,
     required this.child,
   });
   final Widget child;
@@ -135,7 +131,7 @@ class _Wrapper extends StatelessWidget {
     return Container(
       width: 200,
       height: 200,
-      margin: EdgeInsets.all(8),
+      margin: const EdgeInsets.all(8),
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),

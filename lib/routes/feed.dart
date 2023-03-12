@@ -1,10 +1,8 @@
-import 'package:client/app.dart';
 import 'package:client/data/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:swipe_cards/swipe_cards.dart';
 
 import '../data/user.dart';
-import '../app_state.dart';
 
 class FeedScreen extends StatefulWidget {
   const FeedScreen({super.key});
@@ -16,6 +14,7 @@ class FeedScreen extends StatefulWidget {
 class _FeedScreenState extends State<FeedScreen> {
   late MatchEngine _matchEngine;
   List<User> users = [];
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -31,75 +30,79 @@ class _FeedScreenState extends State<FeedScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final sz = MediaQuery.of(context).size;
-    final h = sz.height / 2;
+    return SwipeCards(
+        matchEngine: _matchEngine,
+        onStackFinished: () {
+          // print('finished');
+        },
+        itemBuilder: (context, index) {
+          final user = users[index];
+          return _Card(user: user);
+        });
+  }
+}
 
-    return Center(
-      child: SizedBox(
-        height: h,
-        child: SwipeCards(
-            matchEngine: _matchEngine,
-            onStackFinished: () {
-              print('finished');
-            },
-            itemBuilder: (context, index) {
-              final imgs = users[index].images;
+class _Card extends StatelessWidget {
+  final User user;
 
-              return Container(
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  // borderRadius: BorderRadius.circular(20),
-                  image: imgs.isNotEmpty
-                      ? DecorationImage(
-                          image: NetworkImage(imgs.first, headers: {
-                          'accept': 'application/json',
-                          'X-Token': RepositoryImpl.token,
-                        }))
-                      : DecorationImage(image: AssetImage('assets/ranger_${(index % 4 + 1)}.jpeg')),
+  const _Card({
+    required this.user,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(16),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        image: user.images.isNotEmpty
+            ? DecorationImage(
+                fit: BoxFit.fitHeight,
+                image: NetworkImage(
+                  user.images.last,
+                  headers: {
+                    'accept': 'application/json',
+                    'X-Token': RepositoryImpl.token,
+                  },
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      users[index].email,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        backgroundColor: Colors.white,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      users[index].name,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        backgroundColor: Colors.white,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      users[index].description,
-                      style: TextStyle(
-                        fontSize: 20,
-                        // fontWeight: FontWeight.bold,
-                        backgroundColor: Colors.white,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      'tags: ${users[index].tags.join(',')}',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        backgroundColor: Colors.white,
-                      ),
-                    ),
-                  ],
+              )
+            : const DecorationImage(
+                fit: BoxFit.fitHeight,
+                image: AssetImage('assets/ranger_1.jpeg'),
+              ),
+      ),
+      child: Stack(
+        alignment: Alignment.bottomLeft,
+        children: [
+          Positioned(
+            bottom: 16,
+            left: 16,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${user.name}, ${2023 - user.yearOfBirth}',
+                  style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
-              );
-            }),
+                const SizedBox(height: 2),
+                Text(
+                  user.tags.join(','),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

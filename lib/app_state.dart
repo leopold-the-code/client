@@ -32,7 +32,7 @@ class _AppScopeState extends State<AppScope> {
 }
 
 class _InheritedScope extends InheritedWidget {
-  _InheritedScope({
+  const _InheritedScope({
     required super.child,
     required this.state,
   });

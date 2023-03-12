@@ -11,7 +11,7 @@ class MyProfile extends StatefulWidget {
 }
 
 class _MyProfileState extends State<MyProfile> {
-  TextStyle get style => TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
+  TextStyle get style => const TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
 
   @override
   void initState() {
@@ -53,29 +53,29 @@ class _MyProfileState extends State<MyProfile> {
           ),
           const SizedBox(height: 20),
           if (me.images.isEmpty)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10),
+            const Padding(
+              padding: EdgeInsets.only(bottom: 10),
               child: Text('No uploaded image found'),
             ),
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pushNamed(Routes.uploadImage.name);
             },
-            child: Text('Upload image'),
+            child: const Text('Upload image'),
           ),
           const SizedBox(height: 10),
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pushNamed(Routes.tags.name);
             },
-            child: Text('Add tag'),
+            child: const Text('Add tag'),
           ),
           const SizedBox(height: 10),
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pushNamed(Routes.updateProfile.name);
             },
-            child: Text('Update profile data'),
+            child: const Text('Update profile data'),
           ),
         ],
       ),

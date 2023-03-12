@@ -6,7 +6,6 @@ import 'package:client/routes/tag_screen.dart';
 import 'package:client/routes/upload_photo.dart';
 import 'package:flutter/material.dart';
 
-import 'data/user.dart';
 import 'routes/login.dart';
 import 'routes/register.dart';
 
@@ -48,15 +47,15 @@ class InitialScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).pushNamed(Routes.register.name);
                 },
-                child: Text('Registration')),
-            SizedBox(
+                child: const Text('Registration')),
+            const SizedBox(
               height: 20,
             ),
             ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).pushNamed(Routes.login.name);
                 },
-                child: Text('Login')),
+                child: const Text('Login')),
           ],
         ),
       ),

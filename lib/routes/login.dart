@@ -1,8 +1,6 @@
 import 'package:client/app.dart';
-import 'package:client/data/repository.dart';
-import 'package:client/data/user.dart';
 import 'package:client/app_state.dart';
-import 'package:client/routes/feed.dart';
+import 'package:client/data/repository.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -26,25 +24,25 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Login')),
+      appBar: AppBar(title: const Text('Login')),
       body: Center(
         child: SizedBox(
           width: 300,
           height: 400,
           child: Column(
             children: [
-              Text('Login'),
+              const Text('Login'),
               TextField(
                 controller: emailCtlr,
-                decoration: InputDecoration(hintText: 'email'),
+                decoration: const InputDecoration(hintText: 'email'),
                 keyboardType: TextInputType.emailAddress,
               ),
               TextField(
                 controller: pswdCtlr,
-                decoration: InputDecoration(hintText: 'password'),
+                decoration: const InputDecoration(hintText: 'password'),
                 obscureText: true,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30,
               ),
               ElevatedButton(
@@ -68,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Navigator.of(context).pushNamed(Routes.home.name);
                     }
                   },
-                  child: Text('next')),
+                  child: const Text('next')),
             ],
           ),
         ),
