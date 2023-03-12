@@ -146,6 +146,11 @@ class _ProfileInfoCard extends StatelessWidget {
                 'X-Token': RepositoryImpl.token,
               },
             ),
+          )
+        else
+          const Image(
+            fit: BoxFit.fitHeight,
+            image: AssetImage('assets/ranger_1.jpeg'),
           ),
         Container(
           decoration: BoxDecoration(
@@ -205,24 +210,26 @@ class _ProfileInfoCard extends StatelessWidget {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              padding: const EdgeInsets.all(5),
               color: Colors.white,
               height: 100,
               child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: user.images
-                      .map(
-                        (img) => Image(
-                          image: NetworkImage(
-                            img,
-                            headers: {
-                              'accept': 'application/json',
-                              'X-Token': RepositoryImpl.token,
-                            },
-                          ),
+                scrollDirection: Axis.horizontal,
+                children: [
+                  for (int i = 0; i < 10; i++)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 2),
+                      child: Image(
+                        image: NetworkImage(
+                          user.images.length > i ? user.images[i] : user.images.last,
+                          headers: {
+                            'accept': 'application/json',
+                            'X-Token': RepositoryImpl.token,
+                          },
                         ),
-                      )
-                      .toList()),
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
       ],
