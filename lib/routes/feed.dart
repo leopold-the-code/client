@@ -147,6 +147,16 @@ class _ProfileInfoCard extends StatelessWidget {
               },
             ),
           ),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            gradient: const LinearGradient(
+              colors: [Colors.transparent, Colors.black54, Colors.transparent],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+        ),
         Align(
           alignment: Alignment.centerLeft,
           child: Padding(
