@@ -31,14 +31,21 @@ class _FeedScreenState extends State<FeedScreen> {
   @override
   Widget build(BuildContext context) {
     return SwipeCards(
-        matchEngine: _matchEngine,
-        onStackFinished: () {
-          // print('finished');
-        },
-        itemBuilder: (context, index) {
-          final user = users[index];
-          return _Card(user: user);
-        });
+      matchEngine: _matchEngine,
+      onStackFinished: () {},
+      upSwipeAllowed: true,
+      itemBuilder: (context, index) {
+        final user = users[index];
+        return InkWell(
+            onTap: () {
+              showModalBottomSheet(
+                context: context,
+                builder: ((context) => _ProfileInfoCard(user: user)),
+              );
+            },
+            child: _Card(user: user));
+      },
+    );
   }
 }
 
@@ -75,6 +82,16 @@ class _Card extends StatelessWidget {
       child: Stack(
         alignment: Alignment.bottomLeft,
         children: [
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              gradient: const LinearGradient(
+                colors: [Colors.transparent, Colors.black],
+                begin: Alignment.center,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+          ),
           Positioned(
             bottom: 16,
             left: 16,
@@ -85,17 +102,16 @@ class _Card extends StatelessWidget {
                 Text(
                   '${user.name}, ${2023 - user.yearOfBirth}',
                   style: const TextStyle(
-                    fontSize: 28,
+                    fontSize: 32,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  user.tags.join(','),
+                  user.tags.join(', '),
                   style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
                     color: Colors.white,
                   ),
                 ),
@@ -104,6 +120,102 @@ class _Card extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _ProfileInfoCard extends StatelessWidget {
+  final User user;
+
+  const _ProfileInfoCard({
+    required this.user,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        if (user.images.isNotEmpty)
+          Image(
+            fit: BoxFit.fitHeight,
+            image: NetworkImage(
+              user.images.last,
+              headers: {
+                'accept': 'application/json',
+                'X-Token': RepositoryImpl.token,
+              },
+            ),
+          ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${user.name}, ${2023 - user.yearOfBirth}',
+                  style: const TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  user.tags.join(', '),
+                  style: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  user.email,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  user.description,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        if (user.images.isNotEmpty)
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              padding: const EdgeInsets.all(5),
+              color: Colors.white,
+              height: 100,
+              child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: user.images
+                      .map(
+                        (img) => Image(
+                          image: NetworkImage(
+                            img,
+                            headers: {
+                              'accept': 'application/json',
+                              'X-Token': RepositoryImpl.token,
+                            },
+                          ),
+                        ),
+                      )
+                      .toList()),
+            ),
+          ),
+      ],
     );
   }
 }

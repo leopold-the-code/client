@@ -23,17 +23,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text('home'),
-      //   actions: [
-      //     ElevatedButton(
-      //         onPressed: () {
-      //           AppScope.of(context)?.token = '';
-      //           Navigator.of(context).pushNamed(Routes.init.name);
-      //         },
-      //         child: Icon(Icons.logout))
-      //   ],
-      // ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: (index) {
           if (index == 0) {

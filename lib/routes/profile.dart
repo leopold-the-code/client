@@ -77,6 +77,14 @@ class _MyProfileState extends State<MyProfile> {
             },
             child: const Text('Update profile data'),
           ),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: () {
+              AppScope.of(context)?.token = '';
+              Navigator.of(context).pushNamed(Routes.init.name);
+            },
+            child: const Text('Logout'),
+          )
         ],
       ),
     );
