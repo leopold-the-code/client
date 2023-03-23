@@ -46,27 +46,28 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 30,
               ),
               ElevatedButton(
-                  onPressed: () async {
-                    if (emailCtlr.text.isEmpty || pswdCtlr.text.isEmpty) {
-                      return;
-                    }
+                onPressed: () async {
+                  if (emailCtlr.text.isEmpty || pswdCtlr.text.isEmpty) {
+                    return;
+                  }
 
-                    final token = await RepositoryImpl().login(
-                      emailCtlr.text,
-                      pswdCtlr.text,
-                    );
+                  final token = await RepositoryImpl().login(
+                    emailCtlr.text,
+                    pswdCtlr.text,
+                  );
 
-                    if (token.isNotEmpty) {
-                      print('registered. token: $token');
-                      AppScope.of(context)?.token = token;
-                      RepositoryImpl.token = token;
+                  if (token.isNotEmpty) {
+                    print('registered. token: $token');
+                    AppScope.of(context)?.token = token;
+                    RepositoryImpl.token = token;
 
-                      final me = await RepositoryImpl().me();
-                      AppScope.of(context)?.me = me;
-                      Navigator.of(context).pushNamed(Routes.home.name);
-                    }
-                  },
-                  child: const Text('next')),
+                    final me = await RepositoryImpl().me();
+                    AppScope.of(context)?.me = me;
+                    Navigator.of(context).pushNamed(Routes.home.name);
+                  }
+                },
+                child: const Text('Login'),
+              ),
             ],
           ),
         ),

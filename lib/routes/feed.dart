@@ -13,26 +13,42 @@ class FeedScreen extends StatefulWidget {
 
 class _FeedScreenState extends State<FeedScreen> {
   late MatchEngine _matchEngine;
-  List<User> users = [];
+  final List<User> users = [];
+  bool _isLoading = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    RepositoryImpl().feed().then((value) {
+    _matchEngine = MatchEngine(swipeItems: <SwipeItem>[]);
+    _loadFeed();
+  }
+
+  Future<void> _loadFeed() {
+    setState(() => _isLoading = true);
+    return RepositoryImpl().feed().then((value) {
+      users.clear();
       users.addAll(value);
-      _matchEngine =
-          MatchEngine(swipeItems: <SwipeItem>[...users.map((u) => SwipeItem(content: u)).toList()]);
-      setState(() {});
+      _matchEngine = MatchEngine(swipeItems: <SwipeItem>[...users.map((u) => _item(u)).toList()]);
+      setState(() => _isLoading = false);
     });
-    _matchEngine =
-        MatchEngine(swipeItems: <SwipeItem>[...users.map((u) => SwipeItem(content: u)).toList()]);
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (users.isEmpty) {
+      return const Center(child: Text('Feed is empty'));
+    }
+
     return SwipeCards(
       matchEngine: _matchEngine,
-      onStackFinished: () {},
+      onStackFinished: () {
+        debugPrint('adios feed finished');
+        _loadFeed();
+      },
       upSwipeAllowed: true,
       itemBuilder: (context, index) {
         final user = users[index];
@@ -44,6 +60,18 @@ class _FeedScreenState extends State<FeedScreen> {
               );
             },
             child: _Card(user: user));
+      },
+    );
+  }
+
+  SwipeItem _item(User u) {
+    return SwipeItem(
+      content: u,
+      likeAction: () {
+        RepositoryImpl().like(u.id!);
+      },
+      nopeAction: () {
+        RepositoryImpl().dislike(u.id!);
       },
     );
   }

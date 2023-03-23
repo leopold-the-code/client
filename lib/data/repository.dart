@@ -117,4 +117,40 @@ class RepositoryImpl {
     final us = (mp['users'] as List).map((e) => User.fromJson(e)).toList();
     return us;
   }
+
+  Future<bool> like(int userId) async {
+    final url = Uri.https(baseUrl, '/like', {'subject': userId.toString()});
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Token': token,
+      },
+    );
+    return response.body.isNotEmpty;
+  }
+
+  Future<bool> dislike(int userId) async {
+    final url = Uri.https(baseUrl, '/dislike', {'subject': userId.toString()});
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Token': token,
+      },
+    );
+    return response.body.isNotEmpty;
+  }
+
+  Future<bool> resetFeed() async {
+    final url = Uri.https(baseUrl, '/reset_swipes');
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Token': token,
+      },
+    );
+    return response.body.isNotEmpty;
+  }
 }

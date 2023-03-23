@@ -1,4 +1,5 @@
 import 'package:client/app_state.dart';
+import 'package:client/data/repository.dart';
 import 'package:client/routes/feed.dart';
 import 'package:client/routes/home.dart';
 import 'package:client/routes/profile.dart';
@@ -48,14 +49,33 @@ class InitialScreen extends StatelessWidget {
                   Navigator.of(context).pushNamed(Routes.register.name);
                 },
                 child: const Text('Registration')),
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
             ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamed(Routes.login.name);
-                },
-                child: const Text('Login')),
+              onPressed: () {
+                Navigator.of(context).pushNamed(Routes.login.name);
+              },
+              child: const Text('Login'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () async {
+                final token = await RepositoryImpl().login(
+                  'morti@gmail.com',
+                  '11111',
+                );
+
+                if (token.isNotEmpty) {
+                  print('registered. token: $token');
+                  AppScope.of(context)?.token = token;
+                  RepositoryImpl.token = token;
+
+                  final me = await RepositoryImpl().me();
+                  AppScope.of(context)?.me = me;
+                  Navigator.of(context).pushNamed(Routes.home.name);
+                }
+              },
+              child: const Text('Login as test user'),
+            ),
           ],
         ),
       ),

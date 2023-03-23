@@ -80,6 +80,13 @@ class _MyProfileState extends State<MyProfile> {
           const SizedBox(height: 10),
           ElevatedButton(
             onPressed: () {
+              RepositoryImpl().resetFeed();
+            },
+            child: const Text('Reset feed'),
+          ),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: () {
               AppScope.of(context)?.token = '';
               Navigator.of(context).pushNamed(Routes.init.name);
             },
