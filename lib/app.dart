@@ -2,6 +2,7 @@ import 'package:client/app_state.dart';
 import 'package:client/data/repository.dart';
 import 'package:client/routes/feed.dart';
 import 'package:client/routes/home.dart';
+import 'package:client/routes/matches.dart';
 import 'package:client/routes/profile.dart';
 import 'package:client/routes/tag_screen.dart';
 import 'package:client/routes/upload_photo.dart';
@@ -28,6 +29,7 @@ class App extends StatelessWidget {
           Routes.profile.name: (context) => const MyProfile(),
           Routes.tags.name: (context) => const TagScreen(),
           Routes.updateProfile.name: (context) => const RegistrationScreen(isUpdateProfile: true),
+          Routes.matches.name: (context) => const MatchesScreen(),
         },
       ),
     );
@@ -93,7 +95,8 @@ enum Routes {
   profile('/profile'),
   uploadImage('/upload_image'),
   tags('/tags'),
-  updateProfile('/update_profile');
+  updateProfile('/update_profile'),
+  matches('/matches');
 
   final String name;
   const Routes(this.name);

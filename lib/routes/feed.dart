@@ -56,7 +56,7 @@ class _FeedScreenState extends State<FeedScreen> {
             onTap: () {
               showModalBottomSheet(
                 context: context,
-                builder: ((context) => _ProfileInfoCard(user: user)),
+                builder: ((context) => ProfileInfoCard(user: user)),
               );
             },
             child: _Card(user: user));
@@ -152,10 +152,11 @@ class _Card extends StatelessWidget {
   }
 }
 
-class _ProfileInfoCard extends StatelessWidget {
+class ProfileInfoCard extends StatelessWidget {
   final User user;
 
-  const _ProfileInfoCard({
+  const ProfileInfoCard({
+    super.key,
     required this.user,
   });
 

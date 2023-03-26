@@ -91,6 +91,13 @@ class _MyProfileState extends State<MyProfile> {
               Navigator.of(context).pushNamed(Routes.init.name);
             },
             child: const Text('Logout'),
+          ),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(Routes.matches.name);
+            },
+            child: const Text('Matches'),
           )
         ],
       ),

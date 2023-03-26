@@ -153,4 +153,22 @@ class RepositoryImpl {
     );
     return response.body.isNotEmpty;
   }
+
+  Future<List<User>> matches() async {
+    final url = Uri.https(
+      baseUrl,
+      '/matches',
+    );
+
+    final response = await http.get(url, headers: {
+      'accept': 'application/json',
+      'X-Token': token,
+    });
+    final mp = jsonDecode(response.body);
+    final us = (mp as List).map((e) => User.fromJson(e)).toList();
+    return us;
+  }
 }
+
+
+// [{"email":"email@example.com","name":"DemoName","description":"Description","birth_date":2001,"id":46,"tags":["chess"],"images":["https://find-friends.fly.dev/get_image/5"]}]
