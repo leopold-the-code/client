@@ -66,6 +66,13 @@ class _MyProfileState extends State<MyProfile> {
           const SizedBox(height: 10),
           ElevatedButton(
             onPressed: () {
+              Navigator.of(context).pushNamed(Routes.matches.name);
+            },
+            child: const Text('Matches'),
+          ),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: () {
               Navigator.of(context).pushNamed(Routes.tags.name);
             },
             child: const Text('Add tag'),
@@ -85,20 +92,16 @@ class _MyProfileState extends State<MyProfile> {
             child: const Text('Reset feed'),
           ),
           const SizedBox(height: 10),
-          ElevatedButton(
-            onPressed: () {
-              AppScope.of(context)?.token = '';
-              Navigator.of(context).pushNamed(Routes.init.name);
-            },
-            child: const Text('Logout'),
+          Align(
+            alignment: Alignment.centerRight,
+            child: ElevatedButton(
+              onPressed: () {
+                AppScope.of(context)?.token = '';
+                Navigator.of(context).pushNamed(Routes.init.name);
+              },
+              child: const Icon(Icons.logout),
+            ),
           ),
-          const SizedBox(height: 10),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed(Routes.matches.name);
-            },
-            child: const Text('Matches'),
-          )
         ],
       ),
     );
