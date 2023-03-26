@@ -19,6 +19,7 @@ enum NavBar {
 
 class _HomeScreenState extends State<HomeScreen> {
   NavBar navState = NavBar.feed;
+  int _index = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +28,14 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: (index) {
           if (index == 0) {
             navState = NavBar.feed;
+            _index = 0;
           } else {
             navState = NavBar.profile;
+            _index = 1;
           }
           setState(() {});
         },
+        currentIndex: _index,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.dynamic_feed), label: 'feed'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'profile'),
