@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:client/data/user.dart';
 import 'package:http/http.dart' as http;
+import 'package:location/location.dart';
 
 const String baseUrl = 'find-friends.fly.dev';
 
@@ -167,6 +168,47 @@ class RepositoryImpl {
     final mp = jsonDecode(response.body);
     final us = (mp as List).map((e) => User.fromJson(e)).toList();
     return us;
+  }
+
+  Future<bool> _updateLocation(double lat, double long) async {
+    final url = Uri.https(baseUrl, '/me');
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Token': token,
+      },
+      body: jsonEncode({
+        'latitude': lat,
+        'longitude': long,
+      }),
+    );
+    return response.body.isNotEmpty;
+  }
+
+  Future<bool> updateLocation() async {
+    Location location = Location();
+    PermissionStatus permissionGranted;
+
+    bool serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
+        return false;
+      }
+    }
+
+    permissionGranted = await location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
+        return false;
+      }
+    }
+
+    LocationData locationData = await location.getLocation();
+    await _updateLocation(locationData.latitude!, locationData.longitude!);
+    return true;
   }
 }
 

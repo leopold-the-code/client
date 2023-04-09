@@ -1,3 +1,4 @@
+import 'package:client/data/repository.dart';
 import 'package:client/routes/feed.dart';
 import 'package:client/routes/profile.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,16 @@ enum NavBar {
 class _HomeScreenState extends State<HomeScreen> {
   NavBar navState = NavBar.feed;
   int _index = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    RepositoryImpl().updateLocation().then((updated) {
+      if (updated) {
+        debugPrint('location updated');
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

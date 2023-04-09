@@ -52,6 +52,11 @@ class _MyProfileState extends State<MyProfile> {
             style: style,
           ),
           const SizedBox(height: 20),
+          if (me.hasLocationData)
+            Text(
+              'lat: ${me.lat}, long: ${me.long}',
+              style: style,
+            ),
           if (me.images.isEmpty)
             const Padding(
               padding: EdgeInsets.only(bottom: 10),

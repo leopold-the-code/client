@@ -8,6 +8,8 @@ class User {
     this.password,
     this.tags = const [],
     this.images = const [],
+    this.lat,
+    this.long,
   });
 
   final int? id;
@@ -18,6 +20,10 @@ class User {
   final String description;
   final List<String> tags;
   final List<String> images;
+  final double? lat;
+  final double? long;
+
+  bool get hasLocationData => lat != null && long != null;
 
   factory User.fromJson(Map<String, dynamic> json) => User(
         email: json['email'] as String,
@@ -28,6 +34,8 @@ class User {
         id: json['id'] as int,
         tags: (json['tags'] as List).map((e) => e as String).toList(),
         images: (json['images'] as List).map((e) => e as String).toList(),
+        lat: json['latitude'] != null ? json['latitude'] as double : null,
+        long: json['longitude'] != null ? json['longitude'] as double : null,
       );
 
   Map<String, String> toJson() {
