@@ -24,44 +24,46 @@ class _MyProfileState extends State<MyProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final me = AppScope.of(context)!.me!;
+    final me = AppScope.of(context)!.me;
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Email: ${me.email}',
-            style: style,
-          ),
-          Text(
-            'Name: ${me.name}',
-            style: style,
-          ),
-          Text(
-            'Description: ${me.description}',
-            style: style,
-          ),
-          Text(
-            'Year of birth: ${me.yearOfBirth}',
-            style: style,
-          ),
-          Text(
-            'Tags: ${me.tags}',
-            style: style,
-          ),
-          const SizedBox(height: 20),
-          if (me.hasLocationData)
+          if (me != null) ...[
             Text(
-              'lat: ${me.lat}, long: ${me.long}',
+              'Email: ${me.email}',
               style: style,
             ),
-          if (me.images.isEmpty)
-            const Padding(
-              padding: EdgeInsets.only(bottom: 10),
-              child: Text('No uploaded image found'),
+            Text(
+              'Name: ${me.name}',
+              style: style,
             ),
+            Text(
+              'Description: ${me.description}',
+              style: style,
+            ),
+            Text(
+              'Year of birth: ${me.yearOfBirth}',
+              style: style,
+            ),
+            Text(
+              'Tags: ${me.tags}',
+              style: style,
+            ),
+            const SizedBox(height: 20),
+            if (me.hasLocationData)
+              Text(
+                'lat: ${me.lat}, long: ${me.long}',
+                style: style,
+              ),
+            if (me.images.isEmpty)
+              const Padding(
+                padding: EdgeInsets.only(bottom: 10),
+                child: Text('No uploaded image found'),
+              ),
+          ],
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pushNamed(Routes.uploadImage.name);

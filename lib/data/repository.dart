@@ -6,7 +6,7 @@ import 'package:client/data/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
 
-const String baseUrl = 'find-friends.fly.dev';
+const String baseUrl = 'friends.alisher.cc';
 
 class RepositoryImpl {
   static String token = '';
@@ -38,14 +38,17 @@ class RepositoryImpl {
     return token;
   }
 
-  Future<User> me() async {
+  Future<User?> me() async {
     final url = Uri.https(baseUrl, '/me');
     final response = await http.get(url, headers: {
       'accept': 'application/json',
       'X-Token': token,
     });
-    final u = User.fromJson(jsonDecode(response.body));
-    return u;
+    if (response.statusCode == 200) {
+      final u = User.fromJson(jsonDecode(response.body));
+      return u;
+    }
+    return null;
   }
 
   Future<bool> updateProfile(User me) async {
