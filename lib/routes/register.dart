@@ -30,7 +30,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.isUpdateProfile ? 'Update profile' : 'Registration'),
         backgroundColor: Colors.white,
         elevation: 0,
         leading: InkWell(
@@ -160,15 +159,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   children: [
                     const Text('You have an account?'),
                     const SizedBox(width: 10),
-                    InkWell(
-                      onTap: () {
+                    TextButton(
+                      onPressed: () {
                         Navigator.of(context).pushNamed(Routes.login.name);
                       },
-                      child: const Text(
-                        'Log in',
-                        style: TextStyle(decoration: TextDecoration.underline),
-                      ),
-                    )
+                      child: const Text('Log in'),
+                    ),
                   ],
                 )
               ],
