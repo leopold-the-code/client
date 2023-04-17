@@ -1,4 +1,5 @@
 import 'package:client/app_state.dart';
+import 'package:client/data/repository.dart';
 import 'package:client/routes/feed.dart';
 import 'package:client/routes/home.dart';
 import 'package:client/routes/matches.dart';
@@ -10,6 +11,8 @@ import 'package:flutter_svg/svg.dart';
 
 import 'routes/login.dart';
 import 'routes/register.dart';
+
+const bool enableTestUser = true;
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -115,26 +118,28 @@ class InitialScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                // const SizedBox(height: 200)
-                // ElevatedButton(
-                //   onPressed: () async {
-                //     final token = await RepositoryImpl().login(
-                //       'morti@gmail.com',
-                //       '11111',
-                //     );
+                if (enableTestUser) ...[
+                  ElevatedButton(
+                    onPressed: () async {
+                      final token = await RepositoryImpl().login(
+                        'morti@gmail.com',
+                        '11111',
+                      );
 
-                //     if (token.isNotEmpty) {
-                //       print('registered. token: $token');
-                //       AppScope.of(context)?.token = token;
-                //       RepositoryImpl.token = token;
+                      if (token.isNotEmpty) {
+                        print('registered. token: $token');
+                        AppScope.of(context)?.token = token;
+                        RepositoryImpl.token = token;
 
-                //       final me = await RepositoryImpl().me();
-                //       AppScope.of(context)?.me = me;
-                //       Navigator.of(context).pushNamed(Routes.home.name);
-                //     }
-                //   },
-                //   child: const Text('Login as test user'),
-                // ),
+                        final me = await RepositoryImpl().me();
+                        AppScope.of(context)?.me = me;
+                        Navigator.of(context).pushNamed(Routes.home.name);
+                      }
+                    },
+                    child: const Text('Login as test user'),
+                  ),
+                ],
+                const SizedBox(height: 100),
               ],
             ),
           ),

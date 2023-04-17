@@ -155,11 +155,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
                 Row(
                   children: [
                     const Text('You have an account?'),
-                    const SizedBox(width: 10),
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).pushNamed(Routes.login.name);

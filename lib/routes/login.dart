@@ -108,7 +108,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
               Row(
                 children: [
                   const Text('Not Registered Yet?'),
