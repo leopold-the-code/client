@@ -1,6 +1,7 @@
 import 'package:client/app_state.dart';
 import 'package:client/data/repository.dart';
 import 'package:client/data/user.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -25,6 +26,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final TextEditingController descCtlr = TextEditingController();
   bool _passwordVisible = false;
   int? _selectedYear;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -48,40 +50,56 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32),
           child: Center(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Welcome to our community!',
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                const Text(
-                  'Fill the forms with about your information',
-                  style: TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: emailCtlr,
-                  decoration: InputDecoration(
-                    hintText: 'Email',
-                    hintStyle: const TextStyle(fontSize: 16),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Welcome to our community!',
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-                  keyboardType: TextInputType.emailAddress,
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: pswdCtlr,
-                  obscureText: !_passwordVisible,
-                  decoration: InputDecoration(
+                  const SizedBox(height: 24),
+                  const Text(
+                    'Fill the forms with about your information',
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: emailCtlr,
+                    decoration: InputDecoration(
+                      hintText: 'Email',
+                      hintStyle: const TextStyle(fontSize: 16),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value?.isEmpty == true) {
+                        return 'Please enter your email';
+                      } else if (!EmailValidator.validate(value ?? '')) {
+                        return 'Please enter a valid email';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: pswdCtlr,
+                    obscureText: !_passwordVisible,
+                    validator: (value) {
+                      if (value?.isEmpty == true) {
+                        return 'Please enter your password';
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
                       hintText: 'Password',
                       hintStyle: const TextStyle(fontSize: 16),
                       border: OutlineInputBorder(
@@ -94,79 +112,81 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             _passwordVisible = !_passwordVisible;
                           });
                         },
-                      )),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: nameCtlr,
-                  decoration: InputDecoration(
-                    hintText: 'Name',
-                    hintStyle: const TextStyle(fontSize: 16),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  readOnly: true,
-                  controller: yearCtrl,
-                  onTap: () {
-                    _selectDate(context);
-                  },
-                  decoration: InputDecoration(
-                    hintText: 'Year of birth',
-                    hintStyle: const TextStyle(fontSize: 16),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: nameCtlr,
+                    decoration: InputDecoration(
+                      hintText: 'Name',
+                      hintStyle: const TextStyle(fontSize: 16),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: descCtlr,
-                  maxLines: 3,
-                  decoration: InputDecoration(
-                    hintText: 'Description',
-                    hintStyle: const TextStyle(fontSize: 16),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                  const SizedBox(height: 16),
+                  TextField(
+                    readOnly: true,
+                    controller: yearCtrl,
+                    onTap: () {
+                      _selectDate(context);
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Year of birth',
+                      hintStyle: const TextStyle(fontSize: 16),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 32),
-                InkWell(
-                  onTap: _register,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: const Color(0xFF1976D2)),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: descCtlr,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      hintText: 'Description',
+                      hintStyle: const TextStyle(fontSize: 16),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
-                    child: const Center(
-                      child: Text(
-                        'Register',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF1976D2),
+                  ),
+                  const SizedBox(height: 32),
+                  InkWell(
+                    onTap: _register,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: const Color(0xFF1976D2)),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'Register',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF1976D2),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                Row(
-                  children: [
-                    const Text('You have an account?'),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pushNamed(Routes.login.name);
-                      },
-                      child: const Text('Log in'),
-                    ),
-                  ],
-                )
-              ],
+                  Row(
+                    children: [
+                      const Text('You have an account?'),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pushNamed(Routes.login.name);
+                        },
+                        child: const Text('Log in'),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ),
@@ -175,31 +195,33 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   Future _register() async {
-    try {
-      if (widget.isUpdateProfile) {
-        final upd = await RepositoryImpl().updateProfile(
-          User(
-            email: emailCtlr.text,
-            password: pswdCtlr.text.isNotEmpty ? pswdCtlr.text : null,
-            name: nameCtlr.text,
-            yearOfBirth: _selectedYear ?? 2001,
-            description: descCtlr.text,
-          ),
-        );
-      } else {
-        final token = await RepositoryImpl().register(
-          User(
+    if (_formKey.currentState?.validate() ?? false) {
+      try {
+        if (widget.isUpdateProfile) {
+          final upd = await RepositoryImpl().updateProfile(
+            User(
               email: emailCtlr.text,
+              password: pswdCtlr.text.isNotEmpty ? pswdCtlr.text : null,
               name: nameCtlr.text,
-              yearOfBirth: 2001,
+              yearOfBirth: _selectedYear ?? 2001,
               description: descCtlr.text,
-              password: pswdCtlr.text),
-        );
-        debugPrint(token);
+            ),
+          );
+        } else {
+          final token = await RepositoryImpl().register(
+            User(
+                email: emailCtlr.text,
+                name: nameCtlr.text,
+                yearOfBirth: 2001,
+                description: descCtlr.text,
+                password: pswdCtlr.text),
+          );
+          debugPrint(token);
+        }
+        Navigator.pop(context);
+      } catch (e) {
+        print(e);
       }
-      Navigator.pop(context);
-    } catch (e) {
-      print(e);
     }
   }
 
