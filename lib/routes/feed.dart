@@ -95,7 +95,7 @@ class _Card extends StatelessWidget {
             ? DecorationImage(
                 fit: BoxFit.fitHeight,
                 image: NetworkImage(
-                  user.images.last,
+                  'https://friends.alisher.cc/get_image/${user.images.last}',
                   headers: {
                     'accept': 'application/json',
                     'X-Token': RepositoryImpl.token,
@@ -165,22 +165,22 @@ class ProfileInfoCard extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        if (user.images.isNotEmpty)
-          Image(
-            fit: BoxFit.fitHeight,
-            image: NetworkImage(
-              user.images.last,
-              headers: {
-                'accept': 'application/json',
-                'X-Token': RepositoryImpl.token,
-              },
-            ),
-          )
-        else
-          const Image(
-            fit: BoxFit.fitHeight,
-            image: AssetImage('assets/ranger_1.jpeg'),
-          ),
+        // if (user.images.isNotEmpty)
+        //   Image(
+        //     fit: BoxFit.fitHeight,
+        //     image: NetworkImage(
+        //       user.images.last,
+        //       headers: {
+        //         'accept': 'application/json',
+        //         'X-Token': RepositoryImpl.token,
+        //       },
+        //     ),
+        //   )
+        // else
+        const Image(
+          fit: BoxFit.fitHeight,
+          image: AssetImage('assets/ranger_1.jpeg'),
+        ),
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
@@ -235,32 +235,32 @@ class ProfileInfoCard extends StatelessWidget {
             ),
           ),
         ),
-        if (user.images.isNotEmpty)
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              color: Colors.white,
-              height: 100,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  for (int i = 0; i < 10; i++)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 2),
-                      child: Image(
-                        image: NetworkImage(
-                          user.images.length > i ? user.images[i] : user.images.last,
-                          headers: {
-                            'accept': 'application/json',
-                            'X-Token': RepositoryImpl.token,
-                          },
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          ),
+        // if (user.images.isNotEmpty)
+        //   Align(
+        //     alignment: Alignment.bottomCenter,
+        //     child: Container(
+        //       color: Colors.white,
+        //       height: 100,
+        //       child: ListView(
+        //         scrollDirection: Axis.horizontal,
+        //         children: [
+        //           for (int i = 0; i < 10; i++)
+        //             Padding(
+        //               padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 2),
+        //               child: Image(
+        //                 image: NetworkImage(
+        //                   user.images.length > i ? user.images[i] : user.images.last,
+        //                   headers: {
+        //                     'accept': 'application/json',
+        //                     'X-Token': RepositoryImpl.token,
+        //                   },
+        //                 ),
+        //               ),
+        //             ),
+        //         ],
+        //       ),
+        //     ),
+        //   ),
       ],
     );
   }

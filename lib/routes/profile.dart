@@ -1,6 +1,7 @@
 import 'package:client/app.dart';
 import 'package:client/app_state.dart';
 import 'package:client/data/repository.dart';
+import 'package:client/data/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -12,7 +13,11 @@ class MyProfile extends StatefulWidget {
 }
 
 class _MyProfileState extends State<MyProfile> {
-  TextStyle get style => const TextStyle(fontSize: 16);
+  TextStyle get style => const TextStyle(
+        fontSize: 14,
+        color: Colors.white,
+        fontFamily: 'Ubuntu',
+      );
 
   @override
   void initState() {
@@ -25,15 +30,29 @@ class _MyProfileState extends State<MyProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final me = AppScope.of(context)!.me!;
+    final me = AppScope.of(context)!.me ??
+        const User(email: 'email', name: 'name', yearOfBirth: 2000, description: 'description');
 
-    return Padding(
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            // Color(0xFF000000),
+            Color(0xFF0B2238),
+            // Color(0xFF010304),
+            Color(0xFF14324F),
+            // Color(0xFF031425),
+          ],
+        ),
+      ),
       padding: const EdgeInsets.symmetric(horizontal: 32),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(
-            height: 50,
+            height: 80,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -41,34 +60,22 @@ class _MyProfileState extends State<MyProfile> {
               Stack(
                 children: [
                   Container(
-                    width: 100,
-                    height: 100,
+                    width: 80,
+                    height: 80,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
-                        fit: BoxFit.fill,
-                        image: Image.asset('assets/ranger_1.jpeg').image,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    right: 0,
-                    bottom: 0,
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.of(context).pushNamed(Routes.uploadImage.name);
-                      },
-                      child: const CircleAvatar(
-                        radius: 14,
-                        backgroundColor: Colors.white,
-                        child: Icon(
-                          Icons.add_photo_alternate_outlined,
-                          size: 18,
-                          color: Color(0xFF1976D2),
+                        fit: BoxFit.fitHeight,
+                        image: NetworkImage(
+                          'https://friends.alisher.cc/get_image/${me.images.last}',
+                          headers: {
+                            'accept': 'application/json',
+                            'X-Token': RepositoryImpl.token,
+                          },
                         ),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
               const SizedBox(width: 24),
@@ -78,16 +85,17 @@ class _MyProfileState extends State<MyProfile> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           me.name,
-                          style: const TextStyle(
-                            fontSize: 20,
+                          style: style.copyWith(
+                            color: Colors.white,
+                            fontSize: 24,
                             fontWeight: FontWeight.w800,
                           ),
                         ),
-                        const SizedBox(width: 16),
+                        // const SizedBox(width: 16),
                         InkWell(
                           onTap: () {
                             Navigator.of(context).pushNamed(Routes.updateProfile.name);
@@ -100,18 +108,46 @@ class _MyProfileState extends State<MyProfile> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Email: ${me.email}',
-                      style: style,
-                    ),
-                    Text(
-                      'Description: ${me.description}',
-                      style: style,
-                    ),
-                    Text(
-                      'Year of birth: ${me.yearOfBirth}',
-                      style: style,
+                    const SizedBox(height: 16),
+                    Table(
+                      children: [
+                        TableRow(
+                          children: [
+                            Text(
+                              'Email:',
+                              style: style.copyWith(fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              me.email,
+                              style: style,
+                            ),
+                          ],
+                        ),
+                        TableRow(
+                          children: [
+                            Text(
+                              'Description:',
+                              style: style.copyWith(fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              me.description,
+                              style: style,
+                            ),
+                          ],
+                        ),
+                        TableRow(
+                          children: [
+                            Text(
+                              'Year of birth:',
+                              style: style.copyWith(fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              me.yearOfBirth.toString(),
+                              style: style,
+                            ),
+                          ],
+                        )
+                      ],
                     ),
                   ],
                 ),
@@ -122,9 +158,52 @@ class _MyProfileState extends State<MyProfile> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
+                'My images',
+                style: style.copyWith(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).pushNamed(Routes.uploadImage.name);
+                },
+                child: SvgPicture.asset('assets/add.svg'),
+              )
+            ],
+          ),
+          const SizedBox(height: 8),
+          SizedBox(
+            height: 120,
+            // color: const Color(0xFF010304),
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: me.images
+                  .map(
+                    (t) => Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: _Wrapper(
+                        child: Image.network(
+                          fit: BoxFit.cover,
+                          'https://friends.alisher.cc/get_image/$t',
+                          headers: {
+                            'accept': 'application/json',
+                            'X-Token': RepositoryImpl.token,
+                          },
+                        ),
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
                 'My tags',
-                style: TextStyle(
+                style: style.copyWith(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
                 ),
@@ -147,10 +226,10 @@ class _MyProfileState extends State<MyProfile> {
                     (t) => Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: FilterChip(
-                        label: Text('#$t', style: const TextStyle(color: Colors.white)),
+                        label: Text('#$t', style: style.copyWith(color: Colors.black)),
                         showCheckmark: false,
                         selected: true,
-                        selectedColor: const Color(0xFF1976D2),
+                        selectedColor: Colors.white,
                         onSelected: (isSelected) {},
                       ),
                     ),
@@ -176,30 +255,57 @@ class _MyProfileState extends State<MyProfile> {
                   onTap: () {
                     Navigator.of(context).pushNamed(Routes.matches.name);
                   },
-                  child: const Text('Matches',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      )),
+                  child: Text(
+                    'Matches',
+                    style: style.copyWith(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 16),
                 InkWell(
                   onTap: () {
                     AppScope.of(context)?.token = '';
                     Navigator.of(context).pushNamed(Routes.init.name);
                   },
-                  child: const Text('Sign out',
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      )),
+                  child: Text(
+                    'Sign out',
+                    style: style.copyWith(
+                      color: Colors.red,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class _Wrapper extends StatelessWidget {
+  const _Wrapper({
+    required this.child,
+  });
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 100,
+      height: 100,
+      margin: const EdgeInsets.all(8),
+      clipBehavior: Clip.hardEdge,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        // border: Border.all(color: Colors.blueAccent),
+      ),
+      child: child,
     );
   }
 }

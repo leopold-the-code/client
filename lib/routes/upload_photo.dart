@@ -22,7 +22,7 @@ class _UploadPhotoState extends State<UploadPhoto> {
     final serverImages = AppScope.of(context)!.me!.images;
     final repo = RepositoryImpl();
     for (var img in serverImages) {
-      final bytes = await repo.getImage(int.parse(img.split('/').last));
+      final bytes = await repo.getImage(img);
       _loadedFiles.add(bytes);
     }
 
@@ -73,20 +73,9 @@ class _UploadPhotoState extends State<UploadPhoto> {
           ),
           SizedBox(
             width: 200,
-            // height: 100,
             child: Column(
-              // mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // ElevatedButton(
-                //   child: Text('clear'),
-                //   onPressed: () async {
-                //     _localImageStore.clear();
-                //     setState(() {});
-                //   },
-                // ),
-                // SizedBox(
-                //   height: 10,
-                // ),
+
                 ElevatedButton(
                   child: const Text('Submit'),
                   onPressed: () {

@@ -19,7 +19,7 @@ class User {
   final int yearOfBirth;
   final String description;
   final List<String> tags;
-  final List<String> images;
+  final List<int> images;
   final double? lat;
   final double? long;
 
@@ -33,7 +33,7 @@ class User {
         description: json['description'] as String,
         id: json['id'] as int,
         tags: (json['tags'] as List).map((e) => e as String).toList(),
-        images: (json['images'] as List).map((e) => e as String).toList(),
+        images: (json['images'] as List).map((e) => e as int).toList(),
         lat: json['latitude'] != null ? json['latitude'] as double : null,
         long: json['longitude'] != null ? json['longitude'] as double : null,
       );
