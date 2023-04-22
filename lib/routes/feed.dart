@@ -138,7 +138,7 @@ class _Card extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${user.name} ',
+                  '${user.name}${user.distance != null ? ', ${user.distance.toString()} km' : ''}',
                   style: style.copyWith(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
@@ -239,9 +239,9 @@ class ProfileInfoCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${user.name} ',
+                  '${user.name}${user.distance != null ? ', ${user.distance.toString()} km' : ''}',
                   style: style.copyWith(
-                    fontSize: 36,
+                    fontSize: 32,
                     fontWeight: FontWeight.bold,
                   ),
                 ),

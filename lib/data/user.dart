@@ -10,6 +10,7 @@ class User {
     this.images = const [],
     this.lat,
     this.long,
+    this.distance,
   });
 
   final int? id;
@@ -22,6 +23,7 @@ class User {
   final List<int> images;
   final double? lat;
   final double? long;
+  final double? distance;
 
   bool get hasLocationData => lat != null && long != null;
 
@@ -36,6 +38,7 @@ class User {
         images: (json['images'] as List).map((e) => e as int).toList(),
         lat: json['latitude'] != null ? json['latitude'] as double : null,
         long: json['longitude'] != null ? json['longitude'] as double : null,
+        distance: json['distance'],
       );
 
   Map<String, String> toJson() {
