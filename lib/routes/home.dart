@@ -36,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color(0xFF0B2238),
         onTap: (index) {
           if (index == 0) {
             navState = NavBar.feed;
@@ -47,9 +48,21 @@ class _HomeScreenState extends State<HomeScreen> {
           setState(() {});
         },
         currentIndex: _index,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.dynamic_feed), label: 'feed'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'profile'),
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.dynamic_feed_sharp,
+              color: _index == 0 ? Colors.white : null,
+            ),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.person,
+              color: _index == 1 ? Colors.white : null,
+            ),
+            label: '',
+          ),
         ],
       ),
       body: SafeArea(child: navState.index == 0 ? const FeedScreen() : const MyProfile()),

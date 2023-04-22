@@ -35,17 +35,18 @@ class _MyProfileState extends State<MyProfile> {
 
     return Container(
       decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            // Color(0xFF000000),
-            Color(0xFF0B2238),
-            // Color(0xFF010304),
-            Color(0xFF14324F),
-            // Color(0xFF031425),
-          ],
-        ),
+        color: Color(0xFF0B2238),
+        // gradient: LinearGradient(
+        //   begin: Alignment.topCenter,
+        //   end: Alignment.bottomCenter,
+        //   colors: [
+        //     // Color(0xFF000000),
+        //     Color(0xFF0B2238),
+        //     // Color(0xFF010304),
+        //     Color(0xFF14324F),
+        //     // Color(0xFF031425),
+        //   ],
+        // ),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 32),
       child: Column(
@@ -274,6 +275,20 @@ class _MyProfileState extends State<MyProfile> {
                     'Sign out',
                     style: style.copyWith(
                       color: Colors.red,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                InkWell(
+                  onTap: () {
+                    RepositoryImpl().resetFeed();
+                  },
+                  child: Text(
+                    'Reset feed',
+                    style: style.copyWith(
+                      color: Colors.yellow,
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
                     ),

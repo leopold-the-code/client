@@ -35,32 +35,34 @@ class _FeedScreenState extends State<FeedScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    if (users.isEmpty) {
-      return const Center(child: Text('Feed is empty'));
-    }
-
-    return SwipeCards(
-      matchEngine: _matchEngine,
-      onStackFinished: () {
-        debugPrint('adios feed finished');
-        _loadFeed();
-      },
-      upSwipeAllowed: true,
-      itemBuilder: (context, index) {
-        final user = users[index];
-        return InkWell(
-            onTap: () {
-              showModalBottomSheet(
-                context: context,
-                builder: ((context) => ProfileInfoCard(user: user)),
-              );
-            },
-            child: _Card(user: user));
-      },
+    return Container(
+      color: const Color(0xFF0B2238),
+      child: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : users.isEmpty
+              ? const Center(
+                  child: Text(
+                  'Feed is empty',
+                  style: TextStyle(color: Colors.white),
+                ))
+              : SwipeCards(
+                  matchEngine: _matchEngine,
+                  onStackFinished: () {
+                    _loadFeed();
+                  },
+                  upSwipeAllowed: true,
+                  itemBuilder: (context, index) {
+                    final user = users[index];
+                    return InkWell(
+                        onTap: () {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: ((context) => ProfileInfoCard(user: user)),
+                          );
+                        },
+                        child: _Card(user: user));
+                  },
+                ),
     );
   }
 
@@ -84,10 +86,18 @@ class _Card extends StatelessWidget {
     required this.user,
   });
 
+  TextStyle get style => const TextStyle(
+        fontSize: 20,
+        color: Colors.white,
+        fontFamily: 'Ubuntu',
+      );
+
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     return Container(
-      margin: const EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
       alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
@@ -128,21 +138,43 @@ class _Card extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${user.name}, ${2023 - user.yearOfBirth}',
-                  style: const TextStyle(
+                  '${user.name} ',
+                  style: style.copyWith(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
                   ),
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  user.tags.join(', '),
-                  style: const TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
+                const SizedBox(height: 8),
+                if (user.description.isNotEmpty)
+                  Text(
+                    '${user.description} ',
+                    style: style.copyWith(
+                      fontSize: 20,
+                    ),
                   ),
-                ),
+                const SizedBox(height: 16),
+                if (user.tags.isNotEmpty)
+                  SizedBox(
+                    height: 30,
+                    width: width - 80,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: user.tags
+                          .map(
+                            (t) => Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: FilterChip(
+                                label: Text('#$t', style: style.copyWith(color: Colors.black)),
+                                showCheckmark: false,
+                                selected: true,
+                                onSelected: (isSelected) {},
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                const SizedBox(height: 50)
               ],
             ),
           ),
@@ -160,27 +192,34 @@ class ProfileInfoCard extends StatelessWidget {
     required this.user,
   });
 
+  TextStyle get style => const TextStyle(
+        fontSize: 20,
+        color: Colors.white,
+        fontFamily: 'Ubuntu',
+      );
+
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     return Stack(
       fit: StackFit.expand,
       children: [
-        // if (user.images.isNotEmpty)
-        //   Image(
-        //     fit: BoxFit.fitHeight,
-        //     image: NetworkImage(
-        //       user.images.last,
-        //       headers: {
-        //         'accept': 'application/json',
-        //         'X-Token': RepositoryImpl.token,
-        //       },
-        //     ),
-        //   )
-        // else
-        const Image(
-          fit: BoxFit.fitHeight,
-          image: AssetImage('assets/ranger_1.jpeg'),
-        ),
+        if (user.images.isNotEmpty)
+          Image(
+            fit: BoxFit.fitHeight,
+            image: NetworkImage(
+              'https://friends.alisher.cc/get_image/${user.images.last}',
+              headers: {
+                'accept': 'application/json',
+                'X-Token': RepositoryImpl.token,
+              },
+            ),
+          )
+        else
+          const Image(
+            fit: BoxFit.fitHeight,
+            image: AssetImage('assets/ranger_1.jpeg'),
+          ),
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
@@ -200,67 +239,79 @@ class ProfileInfoCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '${user.name}, ${2023 - user.yearOfBirth}',
-                  style: const TextStyle(
-                    fontSize: 32,
+                  '${user.name} ',
+                  style: style.copyWith(
+                    fontSize: 36,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
                   ),
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: 4),
                 Text(
-                  user.tags.join(', '),
-                  style: const TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
+                  '${2023 - user.yearOfBirth} years old',
+                  style: style.copyWith(
+                    fontSize: 22,
                   ),
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  user.email,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
+                const SizedBox(height: 8),
+                if (user.description.isNotEmpty)
+                  Text(
+                    '${user.description} ',
+                    style: style.copyWith(
+                      fontSize: 20,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  user.description,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
+                const SizedBox(height: 16),
+                if (user.tags.isNotEmpty)
+                  SizedBox(
+                    height: 30,
+                    width: width - 40,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: user.tags
+                          .map(
+                            (t) => Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: FilterChip(
+                                label: Text('#$t', style: style.copyWith(color: Colors.black)),
+                                showCheckmark: false,
+                                selected: true,
+                                onSelected: (isSelected) {},
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
                   ),
-                ),
               ],
             ),
           ),
         ),
-        // if (user.images.isNotEmpty)
-        //   Align(
-        //     alignment: Alignment.bottomCenter,
-        //     child: Container(
-        //       color: Colors.white,
-        //       height: 100,
-        //       child: ListView(
-        //         scrollDirection: Axis.horizontal,
-        //         children: [
-        //           for (int i = 0; i < 10; i++)
-        //             Padding(
-        //               padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 2),
-        //               child: Image(
-        //                 image: NetworkImage(
-        //                   user.images.length > i ? user.images[i] : user.images.last,
-        //                   headers: {
-        //                     'accept': 'application/json',
-        //                     'X-Token': RepositoryImpl.token,
-        //                   },
-        //                 ),
-        //               ),
-        //             ),
-        //         ],
-        //       ),
-        //     ),
-        //   ),
+        if (user.images.isNotEmpty)
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              color: const Color(0xFF0B2238),
+              height: 100,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  for (int i in user.images)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 1, vertical: 2),
+                      child: Image(
+                        image: NetworkImage(
+                          'https://friends.alisher.cc/get_image/$i',
+                          headers: {
+                            'accept': 'application/json',
+                            'X-Token': RepositoryImpl.token,
+                          },
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
       ],
     );
   }
