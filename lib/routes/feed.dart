@@ -23,11 +23,26 @@ class _FeedScreenState extends State<FeedScreen> {
     _loadFeed();
   }
 
-  Future<void> _loadFeed() {
+  Future<void> _loadFeed() async {
     setState(() => _isLoading = true);
     return RepositoryImpl().feed().then((value) {
+      if (value.isEmpty) {
+        setState(() => _isLoading = false);
+        return Future.value();
+      }
       users.clear();
-      users.addAll(value);
+      var hasImages = value.where((u) => u.images.isNotEmpty).toList();
+
+      for (var u in value) {
+        if (u.images.isEmpty) {
+          RepositoryImpl().dislike(u.id!);
+        }
+      }
+      if (hasImages.isEmpty) {
+        return _loadFeed();
+      }
+
+      users.addAll(hasImages);
       _matchEngine = MatchEngine(swipeItems: <SwipeItem>[...users.map((u) => _item(u)).toList()]);
       setState(() => _isLoading = false);
     });
@@ -60,7 +75,7 @@ class _FeedScreenState extends State<FeedScreen> {
                             builder: ((context) => ProfileInfoCard(user: user)),
                           );
                         },
-                        child: _Card(user: user));
+                        child: _Card(user: user, index: index));
                   },
                 ),
     );
@@ -84,7 +99,9 @@ class _Card extends StatelessWidget {
 
   const _Card({
     required this.user,
+    required this.index,
   });
+  final int index;
 
   TextStyle get style => const TextStyle(
         fontSize: 20,

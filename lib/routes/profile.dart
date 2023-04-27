@@ -1,7 +1,6 @@
 import 'package:client/app.dart';
 import 'package:client/app_state.dart';
 import 'package:client/data/repository.dart';
-import 'package:client/data/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -22,16 +21,21 @@ class _MyProfileState extends State<MyProfile> {
   @override
   void initState() {
     super.initState();
-    RepositoryImpl()
-        .me()
-        .then((value) => AppScope.of(context)?.me = value)
-        .then((value) => mounted ? setState(() {}) : null);
+    RepositoryImpl().me().then((value) {
+      if (mounted) {
+        setState(() {
+          AppScope.of(context)?.me = value;
+        });
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final me = AppScope.of(context)!.me ??
-        const User(email: 'email', name: 'name', yearOfBirth: 2000, description: 'description');
+    final me = AppScope.of(context)?.me;
+    if (me == null) {
+      return const CircularProgressIndicator();
+    }
 
     return Container(
       decoration: const BoxDecoration(
@@ -63,19 +67,21 @@ class _MyProfileState extends State<MyProfile> {
                   Container(
                     width: 80,
                     height: 80,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        fit: BoxFit.fitHeight,
-                        image: NetworkImage(
-                          'https://friends.alisher.cc/get_image/${me.images.last}',
-                          headers: {
-                            'accept': 'application/json',
-                            'X-Token': RepositoryImpl.token,
-                          },
-                        ),
-                      ),
-                    ),
+                    decoration: me.images.isNotEmpty
+                        ? BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              fit: BoxFit.fitHeight,
+                              image: NetworkImage(
+                                'https://friends.alisher.cc/get_image/${me.images.last}',
+                                headers: {
+                                  'accept': 'application/json',
+                                  'X-Token': RepositoryImpl.token,
+                                },
+                              ),
+                            ),
+                          )
+                        : null,
                   ),
                 ],
               ),

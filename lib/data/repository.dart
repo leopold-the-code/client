@@ -146,18 +146,6 @@ class RepositoryImpl {
     return response.body.isNotEmpty;
   }
 
-  Future<bool> resetFeed() async {
-    final url = Uri.https(baseUrl, '/reset_swipes');
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Token': token,
-      },
-    );
-    return response.body.isNotEmpty;
-  }
-
   Future<List<User>> matches() async {
     final url = Uri.https(
       baseUrl,
@@ -171,22 +159,6 @@ class RepositoryImpl {
     final mp = jsonDecode(response.body);
     final us = (mp as List).map((e) => User.fromJson(e)).toList();
     return us;
-  }
-
-  Future<bool> _updateLocation(double lat, double long) async {
-    final url = Uri.https(baseUrl, '/me');
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Token': token,
-      },
-      body: jsonEncode({
-        'latitude': lat,
-        'longitude': long,
-      }),
-    );
-    return response.body.isNotEmpty;
   }
 
   Future<bool> updateLocation() async {
@@ -213,7 +185,32 @@ class RepositoryImpl {
     await _updateLocation(locationData.latitude!, locationData.longitude!);
     return true;
   }
+
+  Future<bool> _updateLocation(double lat, double long) async {
+    final url = Uri.https(baseUrl, '/me');
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Token': token,
+      },
+      body: jsonEncode({
+        'latitude': lat,
+        'longitude': long,
+      }),
+    );
+    return response.body.isNotEmpty;
+  }
+
+  Future<bool> resetFeed() async {
+    final url = Uri.https(baseUrl, '/reset_swipes');
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Token': token,
+      },
+    );
+    return response.body.isNotEmpty;
+  }
 }
-
-
-// [{"email":"email@example.com","name":"DemoName","description":"Description","birth_date":2001,"id":46,"tags":["chess"],"images":["https://find-friends.fly.dev/get_image/5"]}]
